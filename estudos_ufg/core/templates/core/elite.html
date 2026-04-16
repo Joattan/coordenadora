@@ -1,0 +1,265 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite da Beleza | Odorata</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'core/css/guia.css' %}">
+</head>
+<body style="background-color: var(--white); color: var(--dark-grey);">
+
+    <!-- 1. Hero Principal Elite -->
+    <header class="elite-hero-new">
+        <div class="elite-hero-content">
+            <a href="{% url 'home' %}" style="color: var(--gold-color); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 2rem; font-weight: 600;">
+                <i class="fas fa-arrow-left"></i> Voltar ao Guia
+            </a>
+            <div class="logo-shimmer">
+                <img src="{% static 'core/images/elite_logo_v5.png' %}" alt="Elite da Beleza Logo" style="max-width: 400px; height: auto; display: block;">
+            </div>
+            <p style="font-size: 1.25rem; color: #fff; opacity: 0.9; margin-bottom: 2.5rem; line-height: 1.6;">
+                Programa exclusivo de incentivo e reconhecimento da Odorata para coordenadoras que se destacam em performance, liderança e resultados.
+            </p>
+            <a href="#participar" class="btn btn-gold">Quero fazer parte</a>
+        </div>
+    </header>
+
+    <!-- 2. Seção O que é -->
+    <section id="sobre-elite" style="padding: 8rem 10%;">
+        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+            <span class="prestige-badge">A EXCELÊNCIA OCORRE AQUI</span>
+            <h2 class="text-gradient" style="margin-bottom: 2rem;">O que é a Elite da Beleza?</h2>
+            <p style="font-size: 1.2rem; line-height: 1.8; color: var(--dark-grey);">
+                A Elite da Beleza é um programa de incentivo e reconhecimento exclusivo da Odorata, criado para valorizar coordenadoras que se destacam em performance, liderança e resultados. Ao entrar para a Elite, a coordenadora passa a fazer parte de um ambiente de oportunidades, benefícios e premiações que reconhecem sua dedicação e impulsionam seu crescimento.
+            </p>
+        </div>
+    </section>
+
+    <!-- 3. Seção Benefícios -->
+    <section id="beneficios" style="background-color: var(--light-grey); padding: 8rem 10%;">
+        <div class="section-title">
+            <h2 class="text-gradient">Benefícios do Programa</h2>
+            <p>Ferramentas e recompensas exclusivas para impulsionar sua carreira.</p>
+        </div>
+        
+        <div class="benefit-grid">
+            <div class="benefit-card">
+                <i class="fas fa-tools benefit-icon"></i>
+                <div>
+                    <h4>Material de Apoio</h4>
+                    <p>Ferramentas e estratégias para brilhar em campo.</p>
+                </div>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-graduation-cap benefit-icon"></i>
+                <div>
+                    <h4>Treinamentos Premium</h4>
+                    <p>Workshops de produtos, vendas, marketing e liderança.</p>
+                </div>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-bullhorn benefit-icon"></i>
+                <div>
+                    <h4>Participação em Campanhas</h4>
+                    <p>Destaque em materiais oficiais da marca e reconhecimento público.</p>
+                </div>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-comments benefit-icon"></i>
+                <div>
+                    <h4>Comunicação Direta</h4>
+                    <p>Analista exclusiva e contato via WhatsApp com a diretoria.</p>
+                </div>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-gift benefit-icon"></i>
+                <div>
+                    <h4>Premiação Surpresa</h4>
+                    <p>Sorteios mensais com experiências e vale-compras.</p>
+                </div>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-medal benefit-icon"></i>
+                <div>
+                    <h4>Incentivos Exclusivos</h4>
+                    <p>Recompensas únicas para quem supera resultados.</p>
+                </div>
+            </div>
+            <div class="benefit-card" style="background: var(--gold-gradient); color: #333;">
+                <i class="fas fa-plus-circle benefit-icon" style="color: #333;"></i>
+                <div>
+                    <h4 style="color: #333;">Bônus Extra</h4>
+                    <p style="color: #333;">R$ 200 por campanha acumulado.</p>
+                </div>
+            </div>
+            <div class="benefit-card" style="background: #333; color: #fff;">
+                <i class="fas fa-star benefit-icon" style="color: var(--gold-color);"></i>
+                <div>
+                    <h4 style="color: #fff;">Bônus Premium</h4>
+                    <p style="color: #ccc;">R$ 300 adicionais para quem ultrapassa 400 pedidos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Seção Como Participar -->
+    <section id="participar" style="padding: 8rem 10%; text-align: center;">
+        <div style="background: var(--white); padding: 4rem; border-radius: 40px; box-shadow: 0 30px 60px rgba(0,0,0,0.05); max-width: 900px; margin: 0 auto; border: 1px solid #eee;">
+            <h2 class="text-gradient" style="margin-bottom: 1.5rem;">Como Participar?</h2>
+            <p style="font-size: 1.15rem; line-height: 1.8; color: var(--dark-grey); margin-bottom: 3rem;">
+                Para participar da Elite da Beleza, é necessário realizar 100 pedidos por campanha. A entrada no programa acontece quando a coordenadora alcança 100 pedidos faturados em uma campanha. Para permanecer no programa, é necessário manter o envio mínimo de 100 pedidos por campanha.
+            </p>
+            <div style="display: inline-flex; align-items: center; gap: 1rem; background: var(--light-grey); padding: 1rem 2.5rem; border-radius: 50px; font-weight: 700;">
+                <i class="fas fa-check-circle" style="color: #8CC63F;"></i> Regra de Ouro: 100 Pedidos por Campanha
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Seção Principal Graduação -->
+    <section id="graduacao" style="background-color: var(--nude); padding: 8rem 10%;">
+        <div class="section-title">
+            <h2 class="text-gradient">Graduação da Elite da Beleza</h2>
+            <p>Conquiste seu espaço entre as melhores e suba de nível.</p>
+        </div>
+
+        <div class="graduation-grid">
+            <!-- Elite Bronze -->
+            <div class="grad-card bronze">
+                <span class="metal-label text-bronze">Elite Bronze / TOP 100</span>
+                <img src="{% static 'core/images/prize_100_round.png' %}" alt="Prêmio Bronze" class="grad-prize-img">
+                <h3>TOP 100</h3>
+                <ul style="list-style: none; text-align: left; margin-bottom: 2rem;">
+                    <li style="margin-bottom: 1rem;"><i class="fas fa-calendar-check" style="color: #CD7F32;"></i> 3 Campanhas consecutivas com 100 pedidos</li>
+                    <li style="font-weight: 700;"><i class="fas fa-gift" style="color: #CD7F32;"></i> Recebe Pin Bronze + Relógio de Pulso</li>
+                </ul>
+            </div>
+
+            <!-- Elite Prata -->
+            <div class="grad-card silver">
+                <span class="metal-label text-silver">Elite Prata / TOP 200</span>
+                <img src="{% static 'core/images/prize_200_round.png' %}" alt="Prêmio Prata" class="grad-prize-img">
+                <h3>TOP 200</h3>
+                <ul style="list-style: none; text-align: left; margin-bottom: 2rem;">
+                    <li style="margin-bottom: 1rem;"><i class="fas fa-calendar-check" style="color: #C0C0C0;"></i> 3 Campanhas consecutivas com 200 pedidos</li>
+                    <li style="font-weight: 700;"><i class="fas fa-gift" style="color: #C0C0C0;"></i> Recebe Pin Prata + Smartphone Alta Performance</li>
+                </ul>
+            </div>
+
+            <!-- Elite Ouro -->
+            <div class="grad-card gold">
+                <span class="metal-label text-gold">Elite Ouro / TOP 300</span>
+                <img src="{% static 'core/images/prize_300_round.png' %}" alt="Prêmio Ouro" class="grad-prize-img">
+                <h3>TOP 300</h3>
+                <ul style="list-style: none; text-align: left; margin-bottom: 2rem;">
+                    <li style="margin-bottom: 1rem;"><i class="fas fa-calendar-check" style="color: #FFD700;"></i> 3 Campanhas consecutivas com 300 pedidos</li>
+                    <li style="font-weight: 700;"><i class="fas fa-gift" style="color: #FFD700;"></i> Recebe Pin Ouro + Notebook</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Evento de Encerramento -->
+    <section id="evento" style="padding: 10rem 10%; background: #000; color: var(--white); overflow: hidden; position: relative;">
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, rgba(170,119,28,0.1) 0%, transparent 70%);"></div>
+        <div style="max-width: 800px; margin: 0 auto; text-align: center; position: relative; z-index: 2;">
+            <h2 class="text-metallic-gold" style="font-size: 3rem; margin-bottom: 2rem;">Evento de Encerramento</h2>
+            <p style="font-size: 1.2rem; line-height: 2; opacity: 0.9;">
+                Ao permanecer por 3 meses consecutivos no Grupo Elite da Beleza, conquistando mais de 100 pedidos a cada mês, a coordenadora participa de um Evento de Encerramento especial, criado para celebrar conquistas, reconhecer resultados e realizar a entrega dos prêmios.
+            </p>
+            <div style="margin-top: 4rem;">
+                <span style="font-weight: 700; border-bottom: 2px solid var(--gold-color); padding-bottom: 5px;">CELEBRAÇÃO • RECONHECIMENTO • SUCESSO</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Seção Regulamento -->
+    <section id="regulamento" style="padding: 8rem 10%;">
+        <div class="section-title">
+            <h2 class="text-gradient">Regulamento</h2>
+            <p>Conheça as regras para entrar e permanecer na elite.</p>
+        </div>
+
+        <div class="accordion-container">
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>Entrada no Programa</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>A entrada no programa acontece automaticamente quando a coordenadora alcança 100 pedidos faturados em uma campanha.</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>Permanência na Elite</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Para permanecer no programa, é necessário manter o envio mínimo de 100 pedidos por campanha.</p>
+                </div>
+            </div>
+            <div class="accordion-item" style="border-left: 4px solid var(--accent-color);">
+                <div class="accordion-header">
+                    <span>Critério de Saída</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Se a coordenadora realizar 99 pedidos ou menos em qualquer campanha, ela perde automaticamente todos os benefícios da Elite da Beleza.</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>Vigência do Programa</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>O programa Elite da Beleza tem vigência da Campanha 10/2025 até a Campanha 10/2026.</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>Atualizações e Encerramento</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>As regras do programa podem ser alteradas ou o programa pode ser encerrado pela Odorata sem aviso prévio.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. Rodapé / CTA Final -->
+    <section style="background: var(--primary-gradient); padding: 6rem 10%; text-align: center; color: white; border-radius: 40px 40px 0 0;">
+        <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem;">Elite da Beleza: só as melhores chegam até aqui.</h2>
+        <p style="margin-bottom: 3rem; font-size: 1.2rem; opacity: 0.9;">Sua jornada para o topo começa hoje.</p>
+        <a href="#" class="btn" style="background: white; color: var(--primary-color); font-weight: 800; padding: 1.2rem 3.5rem;">Quero fazer parte</a>
+    </section>
+
+    <footer style="background: #111; color: #666; padding: 4rem 10%; text-align: center;">
+        <p>&copy; 2026 Elite da Beleza | Odorata Cosméticos. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // Accordion Interaction
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
+        
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const item = header.parentElement;
+                const isActive = item.classList.contains('active');
+                
+                // Close all other items
+                document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
+                
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    </script>
