@@ -486,10 +486,10 @@
             const totalCad = cad * rateCad;
 
             // 2. Bônus campanha (cadastros ≥ 15)
-            const bonusCad1 = (currentPhase >= 1 && cad >= 15) ? 600 : 0;
-            const bonusCad2 = (currentPhase >= 2 && cad >= 15) ? 600 : 0;
-            const bonusCad3 = (currentPhase >= 3 && cad >= 15) ? 600 : 0;
-            const bonusCad4 = (currentPhase >= 4 && cad >= 15) ? 300 : 0;
+            const bonusCad1 = (currentPhase === 1 && cad >= 15) ? 600 : 0;
+            const bonusCad2 = (currentPhase === 2 && cad >= 15) ? 600 : 0;
+            const bonusCad3 = (currentPhase === 3 && cad >= 15) ? 600 : 0;
+            const bonusCad4 = (currentPhase === 4 && cad >= 15) ? 300 : 0;
 
             // 3. Dobro de cadastros
             const dobroCad = cad >= 30 ? 500 : 0;
@@ -506,9 +506,9 @@
             }
 
             // 5. Bônus pedidos por campanha
-            const bp1 = (currentPhase >= 1 && ped >= 30) ? 200 : 0;
-            const bp2 = (currentPhase >= 2 && ped >= 50) ? 300 : 0;
-            const bp3 = (currentPhase >= 3 && ped >= 70) ? 400 : 0;
+            const bp1 = (currentPhase === 1 && ped >= 30) ? 200 : 0;
+            const bp2 = (currentPhase === 2 && ped >= 50) ? 300 : 0;
+            const bp3 = (currentPhase === 3 && ped >= 70) ? 400 : 0;
 
             // 6. Retenção
             const tRet06 = ret06 * 20;
