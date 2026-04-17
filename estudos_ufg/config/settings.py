@@ -119,4 +119,4 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 import os
-CSRF_TRUSTED_ORIGINS = ['https://*.hf.space']
+CSRF_TRUSTED_ORIGINS = ['https://*.hf.space', 'https://*.onrender.com']
