@@ -1,0 +1,476 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seja uma Coordenadora de Campo | ODORATA</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'core/css/guia.css' %}?v={% now 'U' %}">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'core/images/logo_odorata_main.png' %}" type="image/x-icon">
+    <style>
+        .proposal-hero {
+            position: relative;
+            height: 100vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            /* Hero image */
+            background: url('{% static "core/images/coordenadora_hero.png" %}') center/cover no-repeat;
+            color: var(--white)
+        }
+
+        .proposal-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.6), transparent);
+        }
+
+        .summary-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-bottom: 5px solid var(--primary-color);
+        }
+
+        .summary-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 45px rgba(245, 130, 32, 0.2);
+        }
+
+        .summary-card i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark-grey);
+        }
+
+        .summary-card .value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            display: block;
+            margin: 1rem 0;
+        }
+
+        .summary-card .label {
+            font-size: 1rem;
+            color: #777;
+        }
+
+        .highlights-section {
+            background: var(--nude);
+            padding: 6rem 10%;
+        }
+
+        .highlight-bar {
+            background: white;
+            padding: 2rem;
+            border-radius: 100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .highlight-bar:hover {
+            transform: scale(1.02);
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .highlight-bar:hover span {
+            color: white;
+        }
+
+        .highlight-bar span {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .highlight-bar .price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        .highlight-bar:hover .price {
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .highlight-bar {
+                flex-direction: column;
+                border-radius: 20px;
+                text-align: center;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Elite da Beleza Cards */
+        .elite-card {
+            position: relative;
+            height: 400px;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 2.5rem;
+            color: white;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .elite-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%);
+            z-index: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .elite-card .card-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            transition: transform 0.6s ease;
+        }
+
+        .elite-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .elite-card:hover .card-bg {
+            transform: scale(1.1);
+        }
+
+        .elite-card .card-content {
+            position: relative;
+            z-index: 2;
+            text-align: left;
+        }
+
+        .elite-card .card-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .elite-card .card-content .rank {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+            display: block;
+            font-weight: 700;
+        }
+
+        .elite-card .card-content .prizes {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--white);
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 0.8rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Logo Oficial Odorata -->
+    <div style="position: fixed; top: 20px; left: 20px; z-index: 9999;">
+        <img src="{% static 'core/images/logo_odorata_main.png' %}" alt="Odorata"
+            style="height: 55px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
+    </div>
+
+    <header class="proposal-hero">
+        <div class="hero-content">
+            <h1 style="font-size: clamp(2.5rem, 6vw, 4.5rem);">Seja uma Coordenadora de Campo</h1>
+            <p style="font-size: 1.4rem; max-width: 600px;">Lidere sua equipe e conquiste ganhos ilimitados com a melhor
+                marca de cosméticos para venda direta.</p>
+            <div class="btn-container">
+                <a href="{% url 'coordenadoras:cadastro' %}" class="btn btn-primary">Quero ser uma coordenadora</a>
+                <a href="{% url 'home' %}" class="btn btn-secondary">Já sou uma coordenadora</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="proposta">
+        <div class="section-title">
+            <h2 class="text-gradient">Proposta de Ganhos 2026</h2>
+            <p>Um resumo rápido e vendedora para você entender seu potencial.</p>
+        </div>
+
+        <div class="summary-card-grid">
+            <div class="elite-card" style="justify-content: flex-end;">
+                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%); z-index: 1;"></div>
+                <img src="{% static 'core/images/Cad01.png' %}" class="card-bg" alt="Cadastros">
+                <div class="card-content">
+                    <span class="rank" style="color: var(--primary-color);">Oportunidade</span>
+                    <h3>Cadastros</h3>
+                    <div class="condition">Ganhe até R$ 50,00 por cada novo cadastro</div>
+                    <p class="prizes" style="font-size: 1.5rem; color: var(--accent-color);">R$ 50,00 / Cadastro</p>
+                </div>
+            </div>
+            <div class="elite-card" style="justify-content: flex-end;">
+                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%); z-index: 1;"></div>
+                <img src="{% static 'core/images/Cad02.png' %}" class="card-bg" alt="Bônus Extra">
+                <div class="card-content">
+                    <span class="rank" style="color: var(--secondary-color);">Reconhecimento</span>
+                    <h3>Bônus Extra</h3>
+                    <div class="condition">Premiamos sua Performance com pedidos e cadastros ativos</div>
+                    <p class="prizes" style="font-size: 1.5rem; color: var(--accent-color);">Performance</p>
+                </div>
+            </div>
+            <div class="elite-card" style="justify-content: flex-end;">
+                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%); z-index: 1;"></div>
+                <img src="{% static 'core/images/Cad03.png' %}" class="card-bg" alt="Escala Real">
+                <div class="card-content">
+                    <span class="rank" style="color: var(--accent-color);">Escalabilidade</span>
+                    <h3>Escala Real</h3>
+                    <div class="condition">Com apenas 50 pedidos, seu ganho inicial garantido</div>
+                    <p class="prizes" style="font-size: 1.5rem; color: var(--accent-color);">R$ 2.500,00</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="highlights-section">
+        <div class="section-title">
+            <h2>Potencialize seus resultados</h2>
+            <p>Quanto mais pedidos sua equipe envia, maior o seu bônus.</p>
+        </div>
+
+        <div style="max-width: 900px; margin: 0 auto;">
+            <div class="highlight-bar">
+                <span>100 Pedidos</span>
+                <span class="price">R$ 4.500,00 (valor aproximado)</span>
+            </div>
+            <div class="highlight-bar">
+                <span>200 Pedidos</span>
+                <span class="price">R$ 8.500,00 (valor aproximado)</span>
+            </div>
+            <div class="highlight-bar" style="background: var(--gold-gradient); color: #333;">
+                <span style="color: #333;">Mais de 300 Pedidos</span>
+                <span class="price" style="color: #333;">R$ 12.900,00 (valor aproximado)</span>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 4rem;">
+            <a href="https://wa.me/seunumerodewhatsapp" target="_blank" class="btn btn-primary"
+                style="padding: 1.5rem 3rem; font-size: 1.2rem;">
+                <i class="fab fa-whatsapp"></i> Falar com nosso time de especialistas
+            </a>
+        </div>
+    </section>
+    <section id="oportunidade">
+        <div class="section-title">
+            <h2 class="text-gradient">A Oportunidade</h2>
+            <p>Ser Coordenadora de Campo é muito mais que um cargo; é uma missão de liderança e desenvolvimento.</p>
+        </div>
+        <div class="card-grid">
+            <div class="card">
+                <i class="fas fa-users card-icon"></i>
+                <h3>Liderança de Equipe</h3>
+                <p>Treine, desenvolva e acompanhe sua equipe com o apoio total da nossa Gerência Divisional.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-chart-line card-icon"></i>
+                <h3>Ganhos por Performance</h3>
+                <p>O seu crescimento é proporcional ao seu esforço e aos resultados da sua equipe.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-handshake card-icon"></i>
+                <h3>Suporte Comercial</h3>
+                <p>Acesso a ferramentas exclusivas e suporte contínuo para garantir seu sucesso.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="quem-somos" style="background-color: var(--light-grey);">
+        <div class="section-title">
+            <h2 class="text-gradient">Nossa Jornada</h2>
+            <p>A Odorata acredita no poder da transformação através da beleza.</p>
+        </div>
+
+        <div class="journey-container">
+            <div class="journey-line"></div>
+
+            <div class="journey-step">
+                <div class="journey-node"></div>
+                <div class="journey-content">
+                    <h4>2013</h4>
+                    <p>Iniciamos nossa operação impactando mais de 10.000 consultoras.</p>
+                </div>
+            </div>
+
+            <div class="journey-step">
+                <div class="journey-node"></div>
+                <div class="journey-content">
+                    <h4>2014</h4>
+                    <p>Em 2014, iniciamos a alavancagem e atingimos 13.400 consultoras.</p>
+                </div>
+            </div>
+
+            <div class="journey-step">
+                <div class="journey-node"></div>
+                <div class="journey-content">
+                    <h4>2017</h4>
+                    <p>Em 2016, a expansão impulsionou o crescimento, superando 20.000 consultoras.</p>
+                </div>
+            </div>
+
+            <div class="journey-step">
+                <div class="journey-node"></div>
+                <div class="journey-content">
+                    <h4>2020</h4>
+                    <p>Em 2020, alcançamos a marca de 40.000 consultoras
+                    </p>
+                </div>
+            </div>
+
+            <div class="journey-step">
+                <div class="journey-node"></div>
+                <div class="journey-content">
+                    <h4>2025</h4>
+                    <p>Marca consolidada no digital e Elite da Beleza fortalecendo as vendas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="section-title">
+            <h2 class="text-gradient">Por que Venda Direta?</h2>
+        </div>
+        <div class="card-grid">
+            <div class="card">
+                <i class="fas fa-wallet card-icon"></i>
+                <h3>Fonte de Renda</h3>
+                <p>Ganhos ilimitados baseados na sua produtividade.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-clock card-icon"></i>
+                <h3>Flexibilidade</h3>
+                <p>Seu tempo, sua agenda, seu ritmo de trabalho.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-user-tie card-icon"></i>
+                <h3>Autonomia</h3>
+                <p>Seja dona do seu próprio negócio com o respaldo de uma grande marca.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-comments card-icon"></i>
+                <h3>Socialização</h3>
+                <p>Construa conexões reais e aumente seu círculo social.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chamada Comercial: Programa de Crescimento -->
+    <section id="crescimento" style="background: var(--nude); padding: 5rem 10%;">
+        <div class="section-title">
+            <h2 class="text-gradient">Muito mais que ganhos financeiros</h2>
+            <p style="font-size: 1.2rem; max-width: 800px; margin: 0 auto;">
+                Além dos seus ganhos, você pode participar do <strong>Programa de Crescimento e Reconhecimento da
+                    Odorata</strong>, conquistando prêmios exclusivos e subindo de nível na sua carreira!
+            </p>
+        </div>
+
+        <div class="summary-card-grid" style="margin-top: 3rem;">
+            <div class="elite-card">
+                <img src="{% static 'core/images/prize_100_round.png' %}" class="card-bg" alt="Elite Bronze">
+                <div class="card-content">
+                    <span class="rank" style="color: #CD7F32;">Reconhecimento TOP 100</span>
+                    <h3 style="color: #CD7F32;">Elite Bronze</h3>
+                    <p class="prizes">Pin Bronze + Relógio</p>
+                </div>
+            </div>
+            <div class="elite-card">
+                <img src="{% static 'core/images/prize_200_round.png' %}" class="card-bg" alt="Elite Prata">
+                <div class="card-content">
+                    <span class="rank" style="color: #C0C0C0;">Reconhecimento TOP 200</span>
+                    <h3 style="color: #C0C0C0;">Elite Prata</h3>
+                    <p class="prizes">Pin Prata + Smartphone</p>
+                </div>
+            </div>
+            <div class="elite-card">
+                <img src="{% static 'core/images/prize_300_round.png' %}" class="card-bg" alt="Elite Ouro">
+                <div class="card-content">
+                    <span class="rank" style="color: var(--gold-color);">Reconhecimento TOP 300</span>
+                    <h3 style="color: var(--gold-color);">Elite Ouro</h3>
+                    <p class="prizes">Pin Ouro + Notebook</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 4rem;">
+            <a href="https://ambientevirtual.odorata.com.br/pre-cadastro?_gl=1%2a1gtdomn%2a_gcl_aw%2aR0NMLjE3NzYyNzIyNTMuQ2p3S0NBanc3dnpPQmhCeEVpd0FjN1dOcjZwRmRtNndQa3ZyU2E4VHlMNTBhcFJUbnI5aTNPT3BnUkI1aUJnNS16Vkt5Z0dWTFMweTR4b0NfR0VRQXZEX0J3RQ..%2a_gcl_au%2aMTEyMzA0MTEzMS4xNzc2MjcxMTg5%2a_ga%2aMTQ5MzE0MDA1Ny4xNzI2ODYwODQ0%2a_ga_H278Y0TMM1%2aczE3NzcwMzkyNTEkbzI4JGcxJHQxNzc3MDM5MjczJGozOCRsMCRoMA..%2a_ga_ZK2YT4K3XL%2aczE3NzcwMzkyNTIkbzE5JGcxJHQxNzc3MDM5MjczJGozOSRsMCRoMA..%2a_ga_6S9V3M68PS%2aczE3NzcwMzkyNTIkbzE5JGcxJHQxNzc3MDM5MjczJGozOSRsMCRoMA.." target="_blank" class="btn btn-primary" style="padding: 1.2rem 3rem;">
+                Quero ser uma consultora
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <h2 style="margin-bottom: 2rem;">A Odorata transforma vidas.</h2>
+
+        <div class="footer-logos">
+            <div class="footer-logo-item" title="Odorata">
+                <img src="{% static 'core/images/logo_odorata_white.svg' %}" alt="Odorata">
+            </div>
+
+
+            <div class="footer-logo-item" title="ABEVD - Membro">
+                <img src="https://www.abevd.org.br/wp-content/uploads/2021/01/ABEVD-WFDSA-LogoMember-02.png"
+                    alt="ABEVD">
+            </div>
+            <div class="footer-logo-item" title="Prêmio Atualidade Cosmética">
+                <img src="https://premioatualidadecosmetica.com/img/core-img/logo_pac.png"
+                    alt="Prêmio Atualidade Cosmética">
+            </div>
+            <a href="https://www.instagram.com/odoratacosmeticos/" target="_blank" class="footer-logo-item"
+                title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+        </div>
+
+        <p>Junte-se a nós e faça parte de uma história de sucesso, empreendedorismo e beleza.</p>
+        <p style="margin-top: 2rem; opacity: 0.5;">&copy; 2026 Odorata Cosméticos. Todos os direitos reservados.</p>
+    </footer>
+
+</body>
+
+</html>

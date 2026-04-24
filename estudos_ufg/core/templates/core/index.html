@@ -12,9 +12,127 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'core/css/guia.css' %}?v={% now 'U' %}">
+    <link rel="stylesheet" href="{% static 'core/css/agente_especialista.css' %}?v={% now 'U' %}">
+    <style>
+        /* Elite da Beleza Cards */
+        .elite-card {
+            position: relative;
+            height: 400px;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 2.5rem;
+            color: white;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .elite-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%);
+            z-index: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .elite-card .card-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            transition: transform 0.6s ease;
+        }
+
+        .elite-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .elite-card:hover .card-bg {
+            transform: scale(1.1);
+        }
+
+        .elite-card .card-content {
+            position: relative;
+            z-index: 2;
+            text-align: left;
+        }
+
+        .elite-card .card-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .elite-card .card-content .rank {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+            display: block;
+            font-weight: 700;
+        }
+
+        .elite-card .card-content .prizes {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--white);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .elite-card .card-content .condition {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .summary-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+    </style>
 </head>
 
-<body>
+<body style="background-color: var(--white); color: var(--dark-grey);">
+    <!-- Logo Oficial Odorata -->
+    <div style="position: fixed; top: 20px; left: 20px; z-index: 9999;">
+        <img src="{% static 'core/images/logo_odorata_main.png' %}" alt="Odorata"
+            style="height: 55px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
+    </div>
+
+    {% if user.is_authenticated %}
+    <div
+        style="position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.4); padding: 0.6rem 1.4rem; border-radius: 50px; display: inline-flex; align-items: center; backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.2); z-index: 9999; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+        {% if candidata.foto %}
+        <img src="{{ candidata.foto.url }}" alt="Foto"
+            style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; margin-right: 12px; border: 2px solid #f58220;">
+        {% else %}
+        <i class="fas fa-user-circle me-2" style="font-size: 2.2rem; color: white;"></i>
+        {% endif %}
+        <span style="font-size: 1rem; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+            Bem-vinda, <strong>{{ primeiro_nome|default:user.username }}</strong>
+            <span style="margin: 0 10px; opacity: 0.5;">|</span>
+            <a href="{% url 'logout' %}"
+                style="color: white; font-size: 0.9rem; text-decoration: none; font-weight: 600; background: rgba(245, 130, 32, 0.8); padding: 5px 15px; border-radius: 20px; transition: all 0.3s;"
+                onmouseover="this.style.background='#f58220'"
+                onmouseout="this.style.background='rgba(245, 130, 32, 0.8)'">Sair</a>
+        </span>
+    </div>
+    {% endif %}
 
     <header class="hero">
         <div class="hero-content">
@@ -22,13 +140,53 @@
             <p>Lidere, motive, desenvolva sua equipe e construa uma trajetória de alta performance com ganhos reais e
                 acompanhamento da Odorata.</p>
             <div class="btn-container">
-                <a href="#contato" class="btn btn-primary">Quero ser Coordenadora</a>
                 <a href="{% url 'elite' %}" class="btn btn-gold" style="padding: 1rem 1.5rem; font-size: 0.9rem;">Elite
                     da Beleza</a>
-                <a href="#ganhos" class="btn btn-secondary">Meus ganhos</a>
+                <a href="https://ambientevirtual.odorata.com.br/apuracao" class="btn btn-secondary" target="_blank">Meus
+                    ganhos</a>
             </div>
         </div>
     </header>
+
+    <section id="proposta">
+        <div class="section-title">
+            <h2 class="text-gradient">Proposta de Ganhos 2026</h2>
+            <p>Um resumo rápido e vendedora para você entender seu potencial.</p>
+        </div>
+
+        <div class="summary-card-grid">
+            <div class="elite-card" style="justify-content: flex-end;">
+                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%); z-index: 1;"></div>
+                <img src="{% static 'core/images/Cad01.png' %}" class="card-bg" alt="Cadastros">
+                <div class="card-content">
+                    <span class="rank" style="color: var(--primary-color);">Oportunidade</span>
+                    <h3>Cadastros</h3>
+                    <div class="condition">Ganhe até R$ 50,00 por cada novo cadastro</div>
+                    <p class="prizes" style="font-size: 1.5rem; color: var(--accent-color);">R$ 50,00 / Cadastro</p>
+                </div>
+            </div>
+            <div class="elite-card" style="justify-content: flex-end;">
+                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%); z-index: 1;"></div>
+                <img src="{% static 'core/images/Cad02.png' %}" class="card-bg" alt="Bônus Extra">
+                <div class="card-content">
+                    <span class="rank" style="color: var(--secondary-color);">Reconhecimento</span>
+                    <h3>Bônus Extra</h3>
+                    <div class="condition">Premiamos sua Performance com pedidos e cadastros ativos</div>
+                    <p class="prizes" style="font-size: 1.5rem; color: var(--accent-color);">Performance</p>
+                </div>
+            </div>
+            <div class="elite-card" style="justify-content: flex-end;">
+                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%); z-index: 1;"></div>
+                <img src="{% static 'core/images/Cad03.png' %}" class="card-bg" alt="Escala Real">
+                <div class="card-content">
+                    <span class="rank" style="color: var(--accent-color);">Escalabilidade</span>
+                    <h3>Escala Real</h3>
+                    <div class="condition">Com apenas 50 pedidos, seu ganho inicial garantido</div>
+                    <p class="prizes" style="font-size: 1.5rem; color: var(--accent-color);">R$ 2.500,00</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- 2. Seção Oportunidade -->
     <section id="oportunidade">
@@ -85,7 +243,7 @@
                 <div class="journey-node"></div>
                 <div class="journey-content">
                     <h4>2017</h4>
-                    <p>Em 2016, a expansão impulsionou o crescimento, superando 20.000 consultoras.</p>
+                    <p>Em 2017, a expansão impulsionou o crescimento, superando 20.000 consultoras.</p>
                 </div>
             </div>
 
@@ -191,7 +349,7 @@
                     </div>
                     <div class="control">
                         <label>Total de Pedidos: <span id="label-pedidos">70</span></label>
-                        <input type="range" id="qtd-ped" min="0" max="500" value="70" step="10">
+                        <input type="range" id="qtd-ped" min="0" max="500" value="70" step="1">
                         <div class="progress-container">
                             <div class="progress-bar" id="progress-ped"></div>
                         </div>
@@ -634,10 +792,71 @@
     <!-- 10. Footer -->
     <footer>
         <h2 style="margin-bottom: 2rem;">A Odorata transforma vidas.</h2>
+
+        <div class="footer-logos">
+            <div class="footer-logo-item" title="Odorata">
+                <img src="{% static 'core/images/logo_odorata_white.svg' %}" alt="Odorata">
+            </div>
+
+
+            <div class="footer-logo-item" title="ABEVD - Membro">
+                <img src="https://www.abevd.org.br/wp-content/uploads/2021/01/ABEVD-WFDSA-LogoMember-02.png"
+                    alt="ABEVD">
+            </div>
+            <div class="footer-logo-item" title="Prêmio Atualidade Cosmética">
+                <img src="https://premioatualidadecosmetica.com/img/core-img/logo_pac.png"
+                    alt="Prêmio Atualidade Cosmética">
+            </div>
+            <a href="https://www.instagram.com/odoratacosmeticos/" target="_blank" class="footer-logo-item"
+                title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+        </div>
+
         <p>Junte-se a nós e faça parte de uma história de sucesso, empreendedorismo e beleza.</p>
         <p style="margin-top: 2rem; opacity: 0.5;">&copy; 2026 Odorata Cosméticos. Todos os direitos reservados.</p>
     </footer>
 
+    <!-- Agente Especialista Widget -->
+    <div id="chat-widget-btn" class="chat-widget-button">
+        <img src="{% static 'core/images/icone_chat.png' %}" alt="Chat"
+            style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+    </div>
+
+    <div id="chat-window" class="chat-window">
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <div class="chat-avatar" style="overflow: hidden;">
+                    <img src="{% static 'core/images/icone_chat.png' %}" alt="Avatar"
+                        style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div>
+                    <h4>Dora</h4>
+                    <span>Especialista em Atendimento</span>
+                </div>
+            </div>
+            <i class="fas fa-times" style="cursor:pointer;"
+                onclick="document.getElementById('chat-window').style.display='none'"></i>
+        </div>
+
+        <div id="chat-messages" class="chat-messages">
+            <!-- Mensagens aparecerão aqui -->
+        </div>
+
+        <div id="typing-indicator" class="typing" style="padding: 0 20px 10px;">
+            Dora está digitando...
+        </div>
+
+        <form id="chat-form" class="chat-input-area">
+            <input type="text" id="chat-input" class="chat-input" placeholder="Tire sua dúvida sobre o programa..."
+                autocomplete="off">
+            <button type="submit" class="chat-send">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
+
+    <script src="{% static 'core/js/agente_especialista.js' %}?v={% now 'U' %}"></script>
 </body>
 
 </html>

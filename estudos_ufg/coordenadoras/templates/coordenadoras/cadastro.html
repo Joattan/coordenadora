@@ -1,0 +1,420 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Candidata a Coordenadora | ODORATA</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS from Core -->
+    <link rel="stylesheet" href="{% static 'core/css/guia.css' %}?v={% now 'U' %}">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #f58220 0%, #ff9a44 100%);
+            --secondary-gradient: linear-gradient(135deg, #333 0%, #555 100%);
+            --glass: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            background: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+        }
+
+        .registration-container {
+            max-width: 900px;
+            margin: 4rem auto;
+            padding: 0 1rem;
+        }
+
+        .form-card {
+            background: var(--glass);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .form-header {
+            background: var(--primary-gradient);
+            padding: 3rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .form-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .form-body {
+            padding: 3rem;
+        }
+
+        .section-block {
+            margin-bottom: 3rem;
+        }
+
+        .section-block h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .form-grid.full {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .form-control,
+        .form-select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            border: 1.5px solid #ddd;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #f58220;
+            box-shadow: 0 0 0 4px rgba(245, 130, 32, 0.1);
+            outline: none;
+        }
+
+        .file-upload-box {
+            background: #fff;
+            border: 2px dashed #ddd;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-box:hover {
+            border-color: #f58220;
+            background: rgba(245, 130, 32, 0.02);
+        }
+
+        .btn-submit {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 1.2rem 3rem;
+            border-radius: 100px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+            box-shadow: 0 10px 20px rgba(245, 130, 32, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(245, 130, 32, 0.4);
+        }
+
+        .btn-submit:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #eee;
+            border-top: 5px solid #f58220;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-body {
+                padding: 1.5rem;
+            }
+        }
+
+        .success-feedback {
+            color: #28a745;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Logo Oficial Odorata -->
+    <div style="position: fixed; top: 20px; left: 20px; z-index: 9999;">
+        <img src="{% static 'core/images/logo_odorata_main.png' %}" alt="Odorata" style="height: 55px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
+    </div>
+
+    <div class="registration-container">
+        <div class="form-card">
+            <div class="form-header">
+                <h1>Proposta de Coordenação</h1>
+                <p>Preencha os dados abaixo para iniciar sua jornada de liderança na Odorata.</p>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" id="registrationForm" class="form-body">
+                {% csrf_token %}
+
+                <!-- Dados Pessoais -->
+                <div class="section-block">
+                    <h2><i class="fas fa-user"></i> Dados Pessoais</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="{{ form.cpf.id_for_label }}">CPF</label>
+                            {{ form.cpf }}
+                            <div id="cpf-error" class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.nome_completo.id_for_label }}">Nome Completo</label>
+                            {{ form.nome_completo }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.email.id_for_label }}">E-mail</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.foto.id_for_label }}">Foto de Perfil (Opcional)</label>
+                            {{ form.foto }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Endereço -->
+                <div class="section-block">
+                    <h2><i class="fas fa-map-marker-alt"></i> Endereço</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="{{ form.cep.id_for_label }}">CEP</label>
+                            {{ form.cep }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.rua.id_for_label }}">Rua</label>
+                            {{ form.rua }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.numero.id_for_label }}">Número</label>
+                            {{ form.numero }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.bairro.id_for_label }}">Bairro</label>
+                            {{ form.bairro }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.cidade.id_for_label }}">Cidade</label>
+                            {{ form.cidade }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.estado.id_for_label }}">Estado (UF)</label>
+                            {{ form.estado }}
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label for="{{ form.complemento.id_for_label }}">Complemento</label>
+                            {{ form.complemento }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dados Profissionais -->
+                <div class="section-block">
+                    <h2><i class="fas fa-briefcase"></i> Dados Profissionais</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="{{ form.empresa_anterior.id_for_label }}">Empresa Anterior</label>
+                            {{ form.empresa_anterior }}
+                        </div>
+                        <div class="form-group" id="outra-empresa-group" style="display: none;">
+                            <label for="{{ form.empresa_outra.id_for_label }}">Qual empresa?</label>
+                            {{ form.empresa_outra }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.media_ganhos.id_for_label }}">Média de Ganhos (R$)</label>
+                            {{ form.media_ganhos }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.quantidade_consultoras.id_for_label }}">Qtd. de Consultoras na Equipe</label>
+                            {{ form.quantidade_consultoras }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documentos -->
+                <div class="section-block">
+                    <h2><i class="fas fa-file-upload"></i> Documentos Obrigatórios</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="{{ form.documento_rg_cnh.id_for_label }}">RG ou CNH</label>
+                            {{ form.documento_rg_cnh }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.documento_cpf.id_for_label }}">CPF</label>
+                            {{ form.documento_cpf }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.comprovante_endereco.id_for_label }}">Comprovante de Endereço</label>
+                            {{ form.comprovante_endereco }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.comprovante_ganhos.id_for_label }}">Comprovante de Ganhos</label>
+                            {{ form.comprovante_ganhos }}
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">Enviar Proposta de Cadastro</button>
+
+                <p style="text-align: center; margin-top: 2rem; font-size: 0.8rem; color: #777;">
+                    Ao enviar, você concorda com nossos termos de privacidade e processamento de dados.
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div style="text-align: center;">
+            <div class="spinner"></div>
+            <p style="margin-top: 1rem; font-weight: 600; color: #555;">Consultando dados...</p>
+        </div>
+    </div>
+
+    <!-- JQuery for Masks and Easy AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Masks
+            $('#id_cpf').mask('000.000.000-00');
+            $('#id_cep').mask('00000-000');
+
+            const showLoading = (show) => {
+                $('#loadingOverlay').css('display', show ? 'flex' : 'none');
+            };
+
+            // CPF Lookup
+            $('#id_cpf').on('blur', function () {
+                const cpf = $(this).val().replace(/\D/g, '');
+                if (cpf.length === 11) {
+                    showLoading(true);
+                    $.getJSON("{% url 'coordenadoras:api_cpf' %}", { cpf: cpf }, function (data) {
+                        showLoading(false);
+                        if (data.success) {
+                            $('#cpf-error').html('<span class="success-feedback"><i class="fas fa-check-circle"></i> CPF Válido</span>');
+                        } else {
+                            $('#cpf-error').text(data.error);
+                        }
+                    }).fail(function() {
+                        showLoading(false);
+                        $('#cpf-error').text('Erro ao validar CPF.');
+                    });
+                }
+            });
+
+            // CEP Lookup
+            $('#id_cep').on('blur', function () {
+                const cep = $(this).val().replace(/\D/g, '');
+                if (cep.length === 8) {
+                    showLoading(true);
+                    $.getJSON("{% url 'coordenadoras:api_cep' %}", { cep: cep }, function (data) {
+                        showLoading(false);
+                        if (data.success) {
+                            $('#id_rua').val(data.rua);
+                            $('#id_bairro').val(data.bairro);
+                            $('#id_cidade').val(data.cidade);
+                            $('#id_estado').val(data.estado);
+                        }
+                    });
+                }
+            });
+
+            // Toggle Outra Empresa
+            $('#id_empresa_anterior').on('change', function () {
+                if ($(this).val() === 'OUTRAS') {
+                    $('#outra-empresa-group').fadeIn();
+                } else {
+                    $('#outra-empresa-group').fadeOut();
+                    $('#id_empresa_outra').val('');
+                }
+            });
+
+            // Initial check for Outra Empresa
+            if ($('#id_empresa_anterior').val() === 'OUTRAS') {
+                $('#outra-empresa-group').show();
+            }
+
+            // Form Submit Feedback
+            $('#registrationForm').on('submit', function () {
+                $('#submitBtn').prop('disabled', true).text('Enviando...');
+            });
+        });
+    </script>
+</body>
+
+</html>

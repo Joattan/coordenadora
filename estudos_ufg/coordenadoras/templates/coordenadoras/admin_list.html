@@ -1,0 +1,218 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Aprovação - Candidatas | ODORATA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #2b2b2b 0%, #1a1a1a 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: #f58220 !important;
+        }
+
+        .dashboard-container {
+            padding: 2rem 0;
+        }
+
+        .card-stats {
+            border: none;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-stats:hover {
+            transform: translateY(-5px);
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            margin-top: 2rem;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pendente { background: #fff3cd; color: #856404; }
+        .status-ajuste { background: #cce5ff; color: #004085; }
+        .status-aprovado { background: #d4edda; color: #155724; }
+        .status-reprovado { background: #f8d7da; color: #721c24; }
+
+        .filter-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-view {
+            background: #f58220;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.4rem 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view:hover {
+            background: #d46e1a;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'core/images/logo_odorata_main.png' %}" alt="Odorata" style="height: 35px; filter: brightness(0) invert(1);">
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span class="nav-link">Olá, {{ request.user.username }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin:index' %}">Painel Django</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container dashboard-container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 fw-bold">Gestão de Candidatas</h1>
+            <p class="text-muted">Análise de propostas para coordenação</p>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filter-section">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Nome</label>
+                    <input type="text" name="nome" class="form-control" placeholder="Buscar por nome..." value="{{ request.GET.nome }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">CPF</label>
+                    <input type="text" name="cpf" class="form-control" placeholder="000.000..." value="{{ request.GET.cpf }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="">Todos</option>
+                        <option value="PENDENTE" {% if request.GET.status == 'PENDENTE' %}selected{% endif %}>Pendente</option>
+                        <option value="AJUSTE" {% if request.GET.status == 'AJUSTE' %}selected{% endif %}>Aguardando Ajuste</option>
+                        <option value="APROVADO" {% if request.GET.status == 'APROVADO' %}selected{% endif %}>Aprovado</option>
+                        <option value="REPROVADO" {% if request.GET.status == 'REPROVADO' %}selected{% endif %}>Reprovado</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-dark w-100"><i class="fas fa-filter me-2"></i> Filtrar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tabela -->
+        <div class="table-container">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Foto</th>
+                            <th>Candidata</th>
+                            <th>CPF</th>
+                            <th>E-mail</th>
+                            <th>Empresa Ant.</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for candidata in candidatas %}
+                        <tr>
+                            <td>
+                                {% if candidata.foto %}
+                                <img src="{{ candidata.foto.url }}" alt="Foto" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                                {% else %}
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-user text-muted" style="font-size: 0.8rem;"></i>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="fw-bold">{{ candidata.nome_completo }}</div>
+                                <small class="text-muted">{{ candidata.data_criacao|date:"d/m/Y H:i" }}</small>
+                            </td>
+                            <td>{{ candidata.cpf }}</td>
+                            <td>{{ candidata.email }}</td>
+                            <td>{{ candidata.get_empresa_anterior_display }}</td>
+                            <td>
+                                <span class="status-badge status-{{ candidata.status|lower }}">
+                                    {{ candidata.get_status_display }}
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <a href="{% url 'coordenadoras:admin_detail' candidata.pk %}" class="btn-view">
+                                    <i class="fas fa-eye me-1"></i> Analisar
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">Nenhuma candidata encontrada.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginação -->
+            {% if is_paginated %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">Anterior</a></li>
+                    {% endif %}
+                    
+                    <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+                    
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">Próximo</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
