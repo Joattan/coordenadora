@@ -1,0 +1,862 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia da Coordenadora de Campo | ODORATA</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'core/css/guia.css' %}?v={% now 'U' %}">
+    <link rel="stylesheet" href="{% static 'core/css/agente_especialista.css' %}?v={% now 'U' %}">
+    <style>
+        /* Elite da Beleza Cards */
+        .elite-card {
+            position: relative;
+            height: 400px;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 2.5rem;
+            color: white;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .elite-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%);
+            z-index: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .elite-card .card-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            transition: transform 0.6s ease;
+        }
+
+        .elite-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .elite-card:hover .card-bg {
+            transform: scale(1.1);
+        }
+
+        .elite-card .card-content {
+            position: relative;
+            z-index: 2;
+            text-align: left;
+        }
+
+        .elite-card .card-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .elite-card .card-content .rank {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+            display: block;
+            font-weight: 700;
+        }
+
+        .elite-card .card-content .prizes {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--white);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .elite-card .card-content .condition {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .summary-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+
+<body style="background-color: var(--white); color: var(--dark-grey);">
+    <!-- Logo Oficial Odorata -->
+    <div style="position: fixed; top: 20px; left: 20px; z-index: 9999;">
+        <img src="{% static 'core/images/logo_odorata_main.png' %}" alt="Odorata"
+            style="height: 55px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
+    </div>
+
+    {% if user.is_authenticated %}
+    <div
+        style="position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.4); padding: 0.6rem 1.4rem; border-radius: 50px; display: inline-flex; align-items: center; backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.2); z-index: 9999; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+        {% if candidata.foto %}
+        <img src="{{ candidata.foto.url }}" alt="Foto"
+            style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; margin-right: 12px; border: 2px solid #f58220;">
+        {% else %}
+        <i class="fas fa-user-circle me-2" style="font-size: 2.2rem; color: white;"></i>
+        {% endif %}
+        <span style="font-size: 1rem; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+            Bem-vinda, <strong>{{ primeiro_nome|default:user.username }}</strong>
+            <span style="margin: 0 10px; opacity: 0.5;">|</span>
+            <a href="{% url 'logout' %}"
+                style="color: white; font-size: 0.9rem; text-decoration: none; font-weight: 600; background: rgba(245, 130, 32, 0.8); padding: 5px 15px; border-radius: 20px; transition: all 0.3s;"
+                onmouseover="this.style.background='#f58220'"
+                onmouseout="this.style.background='rgba(245, 130, 32, 0.8)'">Sair</a>
+        </span>
+    </div>
+    {% endif %}
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Guia da Coordenadora de Campo</h1>
+            <p>Lidere, motive, desenvolva sua equipe e construa uma trajetória de alta performance com ganhos reais e
+                acompanhamento da Odorata.</p>
+            <div class="btn-container">
+                <a href="{% url 'elite' %}" class="btn btn-gold" style="padding: 1rem 1.5rem; font-size: 0.9rem;">Elite
+                    da Beleza</a>
+                <a href="https://ambientevirtual.odorata.com.br/apuracao" class="btn btn-secondary" target="_blank">Meus
+                    ganhos</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="proposta">
+        <div class="section-title">
+            <h2 class="text-gradient">Proposta de Ganhos 2026</h2>
+            <p>Um resumo rápido e vendedora para você entender seu potencial.</p>
+        </div>
+
+        <div class="summary-card-grid">
+            <div class="elite-card" style="justify-content: flex-end;">
+                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%); z-index: 1;"></div>
+                <img src="{% static 'core/images/Cad01.png' %}" class="card-bg" alt="Cadastros">
+                <div class="card-content">
+                    <span class="rank" style="color: var(--primary-color);">Oportunidade</span>
+                    <h3>Cadastros</h3>
+                    <div class="condition">Ganhe até R$ 50,00 por cada novo cadastro</div>
+                    <p class="prizes" style="font-size: 1.5rem; color: var(--accent-color);">R$ 50,00 / Cadastro</p>
+                </div>
+            </div>
+            <div class="elite-card" style="justify-content: flex-end;">
+                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%); z-index: 1;"></div>
+                <img src="{% static 'core/images/Cad02.png' %}" class="card-bg" alt="Bônus Extra">
+                <div class="card-content">
+                    <span class="rank" style="color: var(--secondary-color);">Reconhecimento</span>
+                    <h3>Bônus Extra</h3>
+                    <div class="condition">Premiamos sua Performance com pedidos e cadastros ativos</div>
+                    <p class="prizes" style="font-size: 1.5rem; color: var(--accent-color);">Performance</p>
+                </div>
+            </div>
+            <div class="elite-card" style="justify-content: flex-end;">
+                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%); z-index: 1;"></div>
+                <img src="{% static 'core/images/Cad03.png' %}" class="card-bg" alt="Escala Real">
+                <div class="card-content">
+                    <span class="rank" style="color: var(--accent-color);">Escalabilidade</span>
+                    <h3>Escala Real</h3>
+                    <div class="condition">Com apenas 50 pedidos, seu ganho inicial garantido</div>
+                    <p class="prizes" style="font-size: 1.5rem; color: var(--accent-color);">R$ 2.500,00</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Seção Oportunidade -->
+    <section id="oportunidade">
+        <div class="section-title">
+            <h2 class="text-gradient">A Oportunidade</h2>
+            <p>Ser Coordenadora de Campo é muito mais que um cargo; é uma missão de liderança e desenvolvimento.</p>
+        </div>
+        <div class="card-grid">
+            <div class="card">
+                <i class="fas fa-users card-icon"></i>
+                <h3>Liderança de Equipe</h3>
+                <p>Treine, desenvolva e acompanhe sua equipe com o apoio total da nossa Gerência Divisional.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-chart-line card-icon"></i>
+                <h3>Ganhos por Performance</h3>
+                <p>O seu crescimento é proporcional ao seu esforço e aos resultados da sua equipe.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-handshake card-icon"></i>
+                <h3>Suporte Comercial</h3>
+                <p>Acesso a ferramentas exclusivas e suporte contínuo para garantir seu sucesso.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Seção Quem Somos (Horizontal Journey) -->
+    <section id="quem-somos" style="background-color: var(--light-grey);">
+        <div class="section-title">
+            <h2 class="text-gradient">Nossa Jornada</h2>
+            <p>A Odorata acredita no poder da transformação através da beleza.</p>
+        </div>
+
+        <div class="journey-container">
+            <div class="journey-line"></div>
+
+            <div class="journey-step">
+                <div class="journey-node"></div>
+                <div class="journey-content">
+                    <h4>2013</h4>
+                    <p>Iniciamos nossa operação impactando mais de 10.000 consultoras.</p>
+                </div>
+            </div>
+
+            <div class="journey-step">
+                <div class="journey-node"></div>
+                <div class="journey-content">
+                    <h4>2014</h4>
+                    <p>Em 2014, iniciamos a alavancagem e atingimos 13.400 consultoras.</p>
+                </div>
+            </div>
+
+            <div class="journey-step">
+                <div class="journey-node"></div>
+                <div class="journey-content">
+                    <h4>2017</h4>
+                    <p>Em 2017, a expansão impulsionou o crescimento, superando 20.000 consultoras.</p>
+                </div>
+            </div>
+
+            <div class="journey-step">
+                <div class="journey-node"></div>
+                <div class="journey-content">
+                    <h4>2020</h4>
+                    <p>Em 2020, alcançamos a marca de 40.000 consultoras
+                    </p>
+                </div>
+            </div>
+
+            <div class="journey-step">
+                <div class="journey-node"></div>
+                <div class="journey-content">
+                    <h4>2025</h4>
+                    <p>Marca consolidada no digital e Elite da Beleza fortalecendo as vendas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Benefícios da Venda Direta -->
+    <section>
+        <div class="section-title">
+            <h2 class="text-gradient">Por que Venda Direta?</h2>
+        </div>
+        <div class="card-grid">
+            <div class="card">
+                <i class="fas fa-wallet card-icon"></i>
+                <h3>Fonte de Renda</h3>
+                <p>Ganhos ilimitados baseados na sua produtividade.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-clock card-icon"></i>
+                <h3>Flexibilidade</h3>
+                <p>Seu tempo, sua agenda, seu ritmo de trabalho.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-user-tie card-icon"></i>
+                <h3>Autonomia</h3>
+                <p>Seja dona do seu próprio negócio com o respaldo de uma grande marca.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-comments card-icon"></i>
+                <h3>Socialização</h3>
+                <p>Construa conexões reais e aumente seu círculo social.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Ganhos e Política Comercial (Simulator First) -->
+    <section id="ganhos" style="background-color: var(--nude);">
+        <div class="section-title">
+            <h2 class="text-gradient">Simulador de Ganhos 2026</h2>
+            <p>Ajuste os indicadores abaixo e veja sua estimativa de ganho real em tempo real.</p>
+        </div>
+
+        <!-- Simulador Visual -->
+        <div class="simulator-container sim-layout">
+
+            <!-- ESQUERDA: Campanhas + Ticket + Retenção -->
+            <div class="sim-left">
+                <p class="sim-camp-question">Simule seu ganho de acordo com a campanha que você está.</p>
+                <div class="phase-selector-col">
+                    <div class="phase-tab active" data-phase="1">1ª Campanha</div>
+                    <div class="phase-tab" data-phase="2">2ª Campanha</div>
+                    <div class="phase-tab" data-phase="3">3ª Campanha</div>
+                    <div class="phase-tab" data-phase="4">4ª Campanha</div>
+                </div>
+
+                <div class="ticket-medio-box">
+                    <label for="ticket-medio" class="ticket-label">Ticket Médio <span>(R$)</span></label>
+                    <input type="number" id="ticket-medio" value="250" class="ticket-input">
+                </div>
+
+                <div class="retencao-box">
+                    <h4 class="retencao-title">Bônus Retenção</h4>
+                    <div class="retencao-row">
+                        <span class="retencao-desc">2º ao 6º mês &nbsp;<strong>R$ 20</strong></span>
+                        <input type="number" id="ret-06" min="0" value="0" class="retencao-input" placeholder="0">
+                        <span class="retencao-eq">=</span>
+                        <span class="retencao-result" id="ret-06-result">R$ -</span>
+                    </div>
+                    <div class="retencao-row">
+                        <span class="retencao-desc">7º ao 12º mês &nbsp;<strong>R$ 30</strong></span>
+                        <input type="number" id="ret-12" min="0" value="0" class="retencao-input" placeholder="0">
+                        <span class="retencao-eq">=</span>
+                        <span class="retencao-result" id="ret-12-result">R$ -</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DIREITA: Sliders + Breakdown + Total -->
+            <div class="sim-right">
+                <div class="input-group">
+                    <div class="control">
+                        <label>Novos Cadastros: <span id="label-cadastros">30</span></label>
+                        <input type="range" id="qtd-cad" min="0" max="60" value="30" step="1">
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progress-cad"></div>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <label>Total de Pedidos: <span id="label-pedidos">70</span></label>
+                        <input type="range" id="qtd-ped" min="0" max="500" value="70" step="1">
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progress-ped"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Breakdown por categoria -->
+                <div class="sim-breakdown">
+                    <div class="breakdown-row" style="flex-wrap: wrap;">
+                        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                            <span class="breakdown-label">💼 Bônus Cadastros</span>
+                            <span class="breakdown-val" id="sum-cad">R$ -</span>
+                        </div>
+                        <div class="breakdown-details" id="cad-details"
+                            style="width: 100%; display: flex; flex-direction: column; gap: 4px; margin-top: 8px; font-size: 0.8rem; color: #777; padding-left: 20px; border-left: 2px solid #eee;">
+                        </div>
+                    </div>
+                    <div class="breakdown-row" style="flex-wrap: wrap;">
+                        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                            <span class="breakdown-label">📦 Bônus Pedidos</span>
+                            <span class="breakdown-val" id="sum-ped">R$ -</span>
+                        </div>
+                        <div class="breakdown-details" id="ped-details"
+                            style="width: 100%; display: flex; flex-direction: column; gap: 4px; margin-top: 8px; font-size: 0.8rem; color: #777; padding-left: 20px; border-left: 2px solid #eee;">
+                        </div>
+                    </div>
+                    <div class="breakdown-row">
+                        <span class="breakdown-label">🔄 Retenção</span>
+                        <span class="breakdown-val" id="sum-ret">R$ -</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span class="breakdown-label">
+                            📊 Faturamento &nbsp;
+                            <small id="fat-total-display" class="breakdown-perc">R$ 0,00</small>
+                            <small id="perc-fat-display" class="breakdown-perc breakdown-perc-dark">0%</small>
+                        </span>
+                        <span class="breakdown-val" id="bonus-fat-display">R$ -</span>
+                    </div>
+                </div>
+
+                <!-- Total Geral -->
+                <div class="total-display">
+                    <h3>Estimativa de Ganhos Total</h3>
+                    <div class="total-amount" id="grand-total">R$ 0,00</div>
+                    <p>Simulação baseada na sua <strong><span id="current-phase-label">1ª Campanha</span></strong></p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Elaborated Tables Reimagined -->
+        <div class="elaborated-tables-container" style="margin-top: 4rem;">
+
+            <!-- Painel de Largada — Layout por linhas -->
+            <div class="launch-panel">
+
+                <!-- Header -->
+                <div class="launch-header">
+                    <div>
+                        <h2>Ganhe com cadastros<br>e pedidos na largada!</h2>
+                    </div>
+                    <div class="launch-accumulate">
+                    </div>
+                </div>
+                <!-- Linha 1: Pílulas de Campanha -->
+                <div class="launch-row launch-pills-row">
+                    <div class="launch-pill">1ª Campanha</div>
+                    <div class="launch-pill">2ª Campanha</div>
+                    <div class="launch-pill">3ª Campanha</div>
+                    <div class="launch-pill launch-pill--highlight">4ª Campanha</div>
+                </div>
+
+                <!-- Linha 2: 15 Cadastros (mínimo) -->
+                <div class="launch-row">
+                    <div class="promo-card">
+                        <div class="promo-card-top">15 Cadastros<span>(mínimo)</span></div>
+                        <div class="promo-card-bottom">R$ 600,00</div>
+                    </div>
+                    <div class="promo-card">
+                        <div class="promo-card-top">15 Cadastros<span>(mínimo)</span></div>
+                        <div class="promo-card-bottom">R$ 600,00</div>
+                    </div>
+                    <div class="promo-card">
+                        <div class="promo-card-top">15 Cadastros<span>(mínimo)</span></div>
+                        <div class="promo-card-bottom">R$ 600,00</div>
+                    </div>
+                    <div class="promo-card">
+                        <div class="promo-card-top">15 Cadastros<span>(mínimo)</span></div>
+                        <div class="promo-card-bottom">R$ 300,00</div>
+                    </div>
+                </div>
+
+                <!-- Linha 3: Bônus 30 Cadastros (fundo vermelho) -->
+                <div class="launch-row launch-bonus-row">
+                    <div class="promo-card">
+                        <div class="promo-card-top">30 Cadastros<span>(mínimo)</span></div>
+                        <div class="promo-card-bottom">+ R$ 500,00</div>
+                    </div>
+                    <div class="promo-card">
+                        <div class="promo-card-top">30 Cadastros<span>(mínimo)</span></div>
+                        <div class="promo-card-bottom">+ R$ 500,00</div>
+                    </div>
+                    <div class="promo-card">
+                        <div class="promo-card-top">30 Cadastros<span>(mínimo)</span></div>
+                        <div class="promo-card-bottom">+ R$ 500,00</div>
+                    </div>
+                    <div class="promo-card">
+                        <div class="promo-card-top">30 Cadastros<span>(mínimo)</span></div>
+                        <div class="promo-card-bottom">+ R$ 500,00</div>
+                    </div>
+                </div>
+
+                <!-- Linha 4: Pedidos (só 3 colunas, sem 4ª campanha) -->
+                <div class="launch-row launch-row--3col">
+                    <div class="promo-card">
+                        <div class="promo-card-top">30 Pedidos<span>(mínimo)</span></div>
+                        <div class="promo-card-bottom">R$ 200,00</div>
+                    </div>
+                    <div class="promo-card">
+                        <div class="promo-card-top">50 Pedidos<span>(mínimo)</span></div>
+                        <div class="promo-card-bottom">R$ 300,00</div>
+                    </div>
+                    <div class="promo-card">
+                        <div class="promo-card-top">70 Pedidos<span>(mínimo)</span></div>
+                        <div class="promo-card-bottom">R$ 400,00</div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Grade de 4 colunas: Ganho Cadastro | Retenção | Bateu Levou | Bônus TUDO -->
+            <div class="bonuses-grid-4">
+
+                <!-- Coluna 1: Ganho por Cadastro -->
+                <div class="pill-table-section bonus-col">
+                    <h2>Ganho por cada <span style="color:#F8E231;">cadastro</span> que você fizer!</h2>
+                    <p style="margin: 1rem 0 1.5rem; font-size: 1.1rem; opacity: 0.9;">Com antecipação<br>de
+                        <strong>50%</strong>
+                    </p>
+                    <span class="table-legend">[ faixa de cadastro ]</span>
+                    <div class="pill-table" style="margin-top: 0.5rem;">
+                        <div class="pill-row">
+                            <div class="pill-label">de 05 a 09</div>
+                            <div class="pill-value">R$ 25,00</div>
+                        </div>
+                        <div class="pill-row">
+                            <div class="pill-label">de 10 acima</div>
+                            <div class="pill-value">R$ 50,00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coluna 2: Bônus Retenção -->
+                <div class="pill-table-section bonus-col"
+                    style="background: linear-gradient(135deg, #2b2b2b 0%, #1a1a1a 100%);">
+                    <h2>Bônus <span style="color:#F8E231;">Retenção:</span><br><span
+                            style="font-size: 1.4rem; font-weight: 400;">Oportunidade de aumentar seus ganhos com a
+                            retenção de novas consultoras</span></h2>
+                    <span class="table-legend" style="margin-top: 1.5rem; display: block;">[ faixa de meses ]</span>
+                    <div class="pill-table" style="margin-top: 0.5rem;">
+                        <div class="pill-row">
+                            <div class="pill-label">do 2º ao 6º mês</div>
+                            <div class="pill-value">R$ 20,00</div>
+                        </div>
+                        <div class="pill-row">
+                            <div class="pill-label">do 7º ao 12º mês</div>
+                            <div class="pill-value">R$ 30,00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coluna 3: Bateu Levou -->
+                <div class="pill-table-section bonus-col">
+                    <h2>Bônus <span style="color:#F8E231;">Bateu Levou:</span><br><span
+                            style="font-size: 1.1rem; font-weight: 400;">Garanta excelentes ganhos no fechamento da
+                            campanha!</span></h2>
+                    <div style="display:flex; gap: 1rem; margin: 1rem 0 0.3rem;">
+                        <span class="table-legend" style="flex: 2;">[ faixa de pedidos ]</span>
+                        <span class="table-legend" style="flex: 1; text-align:right;">[ pré-req. cadastros ]</span>
+                    </div>
+                    <div class="pill-table">
+                        <div class="pill-row">
+                            <div class="pill-label">de 30 a 49</div>
+                            <div class="pill-value">R$ 300,00</div>
+                            <div class="pill-gray" style="min-width:60px;">05</div>
+                        </div>
+                        <div class="pill-row">
+                            <div class="pill-label">de 50 a 79</div>
+                            <div class="pill-value">R$ 500,00</div>
+                            <div class="pill-gray" style="min-width:60px;">05</div>
+                        </div>
+                        <div class="pill-row">
+                            <div class="pill-label">de 80 a 149</div>
+                            <div class="pill-value">R$ 800,00</div>
+                            <div class="pill-gray" style="min-width:60px;">05</div>
+                        </div>
+                        <div class="pill-row">
+                            <div class="pill-label">de 150 a 199</div>
+                            <div class="pill-value">R$ 1.200,00</div>
+                            <div class="pill-gray" style="min-width:60px;">05</div>
+                        </div>
+                        <div class="pill-row">
+                            <div class="pill-label">de 200 a 299</div>
+                            <div class="pill-value">R$ 1.500,00</div>
+                            <div class="pill-gray" style="min-width:60px;">05</div>
+                        </div>
+                        <div class="pill-row">
+                            <div class="pill-label">de 300 acima</div>
+                            <div class="pill-value">R$ 2.000,00</div>
+                            <div class="pill-gray" style="min-width:60px;">05</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coluna 4: Bônus sobre TUDO -->
+                <div class="pill-table-section bonus-col">
+                    <h2>Bônus sobre <span style="color:#F8E231;">TUDO:</span><br><span
+                            style="font-size: 1.1rem; font-weight: 400;">Você ganha um percentual sobre todas as vendas
+                            do seu setor!</span></h2>
+                    <span class="table-legend" style="display:block; margin: 1rem 0 0.3rem;">[ faixa de pedidos ]</span>
+                    <div class="pill-table">
+                        <div class="pill-row">
+                            <div class="pill-label">de 1 a 69</div>
+                            <div class="pill-value">3%</div>
+                        </div>
+                        <div class="pill-row">
+                            <div class="pill-label">de 70 a 99</div>
+                            <div class="pill-value">5%</div>
+                        </div>
+                        <div class="pill-row">
+                            <div class="pill-label">de 100 a 149</div>
+                            <div class="pill-value">7%</div>
+                        </div>
+                        <div class="pill-row">
+                            <div class="pill-label">de 150 a 199</div>
+                            <div class="pill-value">9%</div>
+                        </div>
+                        <div class="pill-row">
+                            <div class="pill-label">de 200 a 299</div>
+                            <div class="pill-value">10%</div>
+                        </div>
+                        <div class="pill-row">
+                            <div class="pill-label">de 300 acima</div>
+                            <div class="pill-value">11%</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <script>
+        let currentPhase = 1;
+
+        function brl(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
+        function dash(v) { return v > 0 ? brl(v) : 'R$ -'; }
+
+        // Tabs de campanha
+        document.querySelectorAll('.phase-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentPhase = parseInt(tab.dataset.phase);
+                document.getElementById('current-phase-label').innerText = tab.innerText;
+                simUpdate();
+            });
+        });
+
+        function simUpdate() {
+            const cad = parseInt(document.getElementById('qtd-cad').value) || 0;
+            const ped = parseInt(document.getElementById('qtd-ped').value) || 0;
+            const ret06 = parseInt(document.getElementById('ret-06').value) || 0;
+            const ret12 = parseInt(document.getElementById('ret-12').value) || 0;
+            const ticket = parseFloat(document.getElementById('ticket-medio').value) || 0;
+
+            // Labels e barras
+            document.getElementById('label-cadastros').innerText = cad;
+            document.getElementById('label-pedidos').innerText = ped;
+            const pc = document.getElementById('progress-cad');
+            const pp = document.getElementById('progress-ped');
+            if (pc) pc.style.width = Math.min((cad / 60) * 100, 100) + '%';
+            if (pp) pp.style.width = Math.min((ped / 500) * 100, 100) + '%';
+
+            // 1. Taxa por cadastro
+            let rateCad = 0;
+            if (cad >= 10) rateCad = 50;
+            else if (cad >= 5) rateCad = 25;
+            const totalCad = cad * rateCad;
+
+            // 2. Bônus campanha (cadastros ≥ 15)
+            const bonusCad1 = (currentPhase === 1 && cad >= 15) ? 600 : 0;
+            const bonusCad2 = (currentPhase === 2 && cad >= 15) ? 600 : 0;
+            const bonusCad3 = (currentPhase === 3 && cad >= 15) ? 600 : 0;
+            const bonusCad4 = (currentPhase === 4 && cad >= 15) ? 300 : 0;
+
+            // 3. Dobro de cadastros
+            const dobroCad = cad >= 30 ? 500 : 0;
+
+            // 4. Bateu Levou
+            let bateu = 0;
+            if (cad >= 5) {
+                if (ped >= 300) bateu = 2000;
+                else if (ped >= 200) bateu = 1500;
+                else if (ped >= 150) bateu = 1200;
+                else if (ped >= 80) bateu = 800;
+                else if (ped >= 50) bateu = 500;
+                else if (ped >= 30) bateu = 300;
+            }
+
+            // 5. Bônus pedidos por campanha
+            const bp1 = (currentPhase === 1 && ped >= 30) ? 200 : 0;
+            const bp2 = (currentPhase === 2 && ped >= 50) ? 300 : 0;
+            const bp3 = (currentPhase === 3 && ped >= 70) ? 400 : 0;
+
+            // 6. Retenção
+            const tRet06 = ret06 * 20;
+            const tRet12 = ret12 * 30;
+            const r06el = document.getElementById('ret-06-result');
+            const r12el = document.getElementById('ret-12-result');
+            if (r06el) r06el.innerText = dash(tRet06);
+            if (r12el) r12el.innerText = dash(tRet12);
+
+            // 7. Faturamento
+            const faturamento = ped * ticket;
+            let perc = 0;
+            if (ped >= 300) perc = 11;
+            else if (ped >= 200) perc = 10;
+            else if (ped >= 150) perc = 9;
+            else if (ped >= 100) perc = 7;
+            else if (ped >= 70) perc = 5;
+            else if (ped >= 1) perc = 3;
+            const bonusFat = faturamento * perc / 100;
+
+            // Grouped sums → breakdown
+            const sumCad = totalCad + bonusCad1 + bonusCad2 + bonusCad3 + bonusCad4 + dobroCad;
+            const sumPed = bateu + bp1 + bp2 + bp3;
+            const sumRet = tRet06 + tRet12;
+
+            document.getElementById('sum-cad').innerText = dash(sumCad);
+            document.getElementById('sum-ped').innerText = dash(sumPed);
+            document.getElementById('sum-ret').innerText = dash(sumRet);
+
+            // Detalhamento Cadastros
+            let cadDetailsHTML = `<div style="display: flex; justify-content: space-between;"><span>${cad} Cads. × R$ ${rateCad}</span> <span>${dash(totalCad)}</span></div>`;
+            const bonusCamp = bonusCad1 + bonusCad2 + bonusCad3 + bonusCad4;
+            if (bonusCamp > 0) {
+                cadDetailsHTML += `<div style="display: flex; justify-content: space-between;"><span>Campanha (15+)</span> <span>${dash(bonusCamp)}</span></div>`;
+            }
+            if (dobroCad > 0) {
+                cadDetailsHTML += `<div style="display: flex; justify-content: space-between;"><span>Dobro (30+)</span> <span>${dash(dobroCad)}</span></div>`;
+            }
+            document.getElementById('cad-details').innerHTML = cadDetailsHTML;
+
+            // Detalhamento Pedidos
+            let pedDetailsHTML = '';
+            const bpCamp = bp1 + bp2 + bp3;
+            if (bpCamp > 0) {
+                pedDetailsHTML += `<div style="display: flex; justify-content: space-between;"><span>Campanha (Ped.)</span> <span>${dash(bpCamp)}</span></div>`;
+            }
+            if (bateu > 0) {
+                pedDetailsHTML += `<div style="display: flex; justify-content: space-between;"><span>Bateu Levou</span> <span>${dash(bateu)}</span></div>`;
+            }
+            const pedDetailsEl = document.getElementById('ped-details');
+            if (pedDetailsEl) {
+                pedDetailsEl.innerHTML = pedDetailsHTML;
+                pedDetailsEl.style.display = pedDetailsHTML ? 'flex' : 'none';
+            }
+            document.getElementById('fat-total-display').innerText = brl(faturamento);
+            document.getElementById('perc-fat-display').innerText = perc + '%';
+            document.getElementById('bonus-fat-display').innerText = dash(bonusFat);
+
+            // Grand total
+            const grand = sumCad + sumPed + sumRet + bonusFat;
+            document.getElementById('grand-total').innerText = brl(grand);
+        }
+
+        ['qtd-cad', 'qtd-ped', 'ret-06', 'ret-12', 'ticket-medio']
+            .forEach(id => document.getElementById(id).addEventListener('input', simUpdate));
+
+        simUpdate();
+    </script>
+
+
+    <!-- 6. Processo de Apuração -->
+    <section class="process-section">
+        <div class="section-title">
+            <h2 class="text-gradient">Processo de Apuração</h2>
+            <p>Acompanhe de perto as etapas do fechamento de resultados.</p>
+        </div>
+
+        <div class="process-container">
+            <div class="process-connector"></div>
+
+            <div class="process-step">
+                <div class="process-icon">
+                    <i class="fas fa-chart-bar"></i>
+                    <div class="process-number">1</div>
+                </div>
+                <div class="process-text">
+                    <h3>Resultado</h3>
+                </div>
+            </div>
+
+            <div class="process-step">
+                <div class="process-icon">
+                    <i class="fas fa-calculator"></i>
+                    <div class="process-number">2</div>
+                </div>
+                <div class="process-text">
+                    <h3>Apuração</h3>
+                </div>
+            </div>
+
+            <div class="process-step">
+                <div class="process-icon">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <div class="process-number">3</div>
+                </div>
+                <div class="process-text">
+                    <h3>Envio NF</h3>
+                </div>
+            </div>
+
+            <div class="process-step">
+                <div class="process-icon process-icon-final">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <div class="process-number">4</div>
+                </div>
+                <div class="process-text">
+                    <h3>Pagamento</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. Footer -->
+    <footer>
+        <h2 style="margin-bottom: 2rem;">A Odorata transforma vidas.</h2>
+
+        <div class="footer-logos">
+            <div class="footer-logo-item" title="Odorata">
+                <img src="{% static 'core/images/logo_odorata_white.svg' %}" alt="Odorata">
+            </div>
+
+
+            <div class="footer-logo-item" title="ABEVD - Membro">
+                <img src="https://www.abevd.org.br/wp-content/uploads/2021/01/ABEVD-WFDSA-LogoMember-02.png"
+                    alt="ABEVD">
+            </div>
+            <div class="footer-logo-item" title="Prêmio Atualidade Cosmética">
+                <img src="https://premioatualidadecosmetica.com/img/core-img/logo_pac.png"
+                    alt="Prêmio Atualidade Cosmética">
+            </div>
+            <a href="https://www.instagram.com/odoratacosmeticos/" target="_blank" class="footer-logo-item"
+                title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+        </div>
+
+        <p>Junte-se a nós e faça parte de uma história de sucesso, empreendedorismo e beleza.</p>
+        <p style="margin-top: 2rem; opacity: 0.5;">&copy; 2026 Odorata Cosméticos. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Agente Especialista Widget -->
+    <div id="chat-widget-btn" class="chat-widget-button">
+        <img src="{% static 'core/images/icone_chat.png' %}" alt="Chat"
+            style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+    </div>
+
+    <div id="chat-window" class="chat-window">
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <div class="chat-avatar" style="overflow: hidden;">
+                    <img src="{% static 'core/images/icone_chat.png' %}" alt="Avatar"
+                        style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div>
+                    <h4>Dora</h4>
+                    <span>Especialista em Atendimento</span>
+                </div>
+            </div>
+            <i class="fas fa-times" style="cursor:pointer;"
+                onclick="document.getElementById('chat-window').style.display='none'"></i>
+        </div>
+
+        <div id="chat-messages" class="chat-messages">
+            <!-- Mensagens aparecerão aqui -->
+        </div>
+
+        <div id="typing-indicator" class="typing" style="padding: 0 20px 10px;">
+            Dora está digitando...
+        </div>
+
+        <form id="chat-form" class="chat-input-area">
+            <input type="text" id="chat-input" class="chat-input" placeholder="Tire sua dúvida sobre o programa..."
+                autocomplete="off">
+            <button type="submit" class="chat-send">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
+
+    <script src="{% static 'core/js/agente_especialista.js' %}?v={% now 'U' %}"></script>
+</body>
+
+</html>

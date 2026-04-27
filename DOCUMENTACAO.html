@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+            color: #333;
+        }
+        h1 {
+            color: #f58220;
+            border-bottom: 2px solid #f58220;
+            padding-bottom: 10px;
+            font-size: 24pt;
+        }
+        h2 {
+            color: #333;
+            margin-top: 30px;
+            border-left: 5px solid #f58220;
+            padding-left: 10px;
+            font-size: 18pt;
+        }
+        h3 {
+            color: #555;
+            font-size: 14pt;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .code {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: Courier, monospace;
+            white-space: pre-wrap;
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #eee;
+            margin: 40px 0;
+        }
+    </style>
+    <title>Documentação Técnica - Estudos UFG</title>
+</head>
+<body>
+    <h1>DOCUMENTAÇÃO TÉCNICA: PROJETO ESTUDOS_UFG (ODORATA)</h1>
+
+    <h2>1. VISÃO GERAL DO PROJETO</h2>
+    <p>O projeto <strong>estudos_ufg</strong> é uma plataforma web robusta desenvolvida para a <strong>Odorata</strong>, focada no recrutamento, gestão e capacitação de Coordenadoras de Campo. O sistema funciona como um portal bifásico: uma área pública para captação de novas candidatas e uma área restrita (Guia da Coordenadora) contendo ferramentas de simulação de ganhos, indicadores de performance e uma assistente virtual inteligente baseada em IA.</p>
+    <p><strong>Tecnologias Principais:</strong></p>
+    <ul>
+        <li><strong>Framework:</strong> Django 6.0.4 (Python 3.12+)</li>
+        <li><strong>Banco de Dados:</strong> SQLite3 (Desenvolvimento/Produção Leve)</li>
+        <li><strong>IA:</strong> Integração com Groq Cloud (Modelo Llama 3.3 70B) e Google Generative AI.</li>
+        <li><strong>Frontend:</strong> HTML5, CSS3 (Vanilla com foco em UX Premium), JavaScript (ES6+) e jQuery.</li>
+        <li><strong>Deploy:</strong> Configurado para ambientes como Hugging Face Spaces e Render (via WhiteNoise).</li>
+    </ul>
+
+    <hr>
+
+    <h2>2. ARQUITETURA E ESTRUTURA</h2>
+    <p>O projeto segue o padrão <strong>MTV (Model-Template-View)</strong> do Django, com uma separação clara de responsabilidades em dois aplicativos principais:</p>
+    <h3>Estrutura de Diretórios:</h3>
+    <div class="code">
+estudos_ufg/
+├── config/              # Configurações globais do projeto (settings, urls, wsgi)
+├── core/                # App principal: Home, IA Dora, Simulador de Ganhos
+├── coordenadoras/       # App de gestão: Cadastro de candidatas e Painel Admin
+├── staticfiles/         # Arquivos estáticos coletados para produção
+├── media/               # Uploads de documentos e fotos das candidatas
+└── db.sqlite3           # Banco de dados relacional
+    </div>
+
+    <h3>Divisão de Apps:</h3>
+    <ol>
+        <li><strong>Core:</strong> Responsável pela experiência da usuária logada. Contém a lógica matemática complexa de bônus da Odorata e a integração com o LLM para a assistente "Dora".</li>
+        <li><strong>Coordenadoras:</strong> Foca no ciclo de vida da candidata. Gerencia desde o formulário de inscrição (com validações de CPF e CEP) até o workflow de aprovação por um administrador.</li>
+    </ol>
+
+    <hr>
+
+    <h2>3. MODELS (Banco de Dados)</h2>
+    <p>A entidade central do sistema é o modelo <code>CandidataCoordenadora</code>, localizado no app <code>coordenadoras</code>.</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Descrição</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>cpf</code></td>
+                <td>CharField</td>
+                <td>Identificador único (14 chars com máscara).</td>
+            </tr>
+            <tr>
+                <td><code>nome_completo</code></td>
+                <td>CharField</td>
+                <td>Nome da candidata.</td>
+            </tr>
+            <tr>
+                <td><code>status</code></td>
+                <td>CharField</td>
+                <td>PENDENTE, AJUSTE, APROVADO, REPROVADO.</td>
+            </tr>
+            <tr>
+                <td><code>media_ganhos</code></td>
+                <td>DecimalField</td>
+                <td>Ganhos em empresas anteriores.</td>
+            </tr>
+            <tr>
+                <td><code>foto</code></td>
+                <td>ImageField</td>
+                <td>Foto de perfil da candidata.</td>
+            </tr>
+            <tr>
+                <td><code>documentos_*</code></td>
+                <td>FileField</td>
+                <td>RG/CNH, CPF, Endereço e Ganhos (upload obrigatório).</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><strong>Regras de Negócio embutidas:</strong> Ao ser marcada como <code>APROVADO</code> na view <code>admin_atualizar_status</code>, o sistema cria automaticamente um <code>User</code> no Django Auth, utilizando o CPF como login e os 6 primeiros dígitos como senha inicial.</p>
+
+    <hr>
+
+    <h2>4. VIEWS E URLS</h2>
+    <p>O projeto utiliza um mix eficiente de <strong>Function-Based Views (FBV)</strong> para lógica rápida e <strong>Class-Based Views (CBV)</strong> para operações de CRUD.</p>
+    <ul>
+        <li><strong>/coordenadoras/cadastro/</strong> (CadastroCandidataView - CBV): Formulário público com upload de arquivos.</li>
+        <li><strong>/chat/</strong> (chat_agente - FBV): Endpoint de processamento da IA Dora.</li>
+        <li><strong>/admin-dashboard/</strong> (admin_dashboard - FBV): Painel administrativo customizado.</li>
+        <li><strong>/coordenadoras/api/cep/</strong>: Microserviço interno para preenchimento automático.</li>
+    </ul>
+
+    <hr>
+
+    <h2>5. TEMPLATES E FRONTEND</h2>
+    <p>Os templates utilizam o motor nativo do Django e compartilham uma identidade visual premium baseada nas cores da Odorata (Laranja e Preto).</p>
+    <ul>
+        <li><strong>Componentes Reutilizáveis:</strong> CSS isolado em <code>guia.css</code> e <code>agente_especialista.css</code>.</li>
+        <li><strong>Formulários:</strong> Utiliza <code>ModelForm</code> para garantir integridade dos dados.</li>
+        <li><strong>Bibliotecas:</strong> jQuery Mask para máscaras e FontAwesome para ícones.</li>
+    </ul>
+
+    <hr>
+
+    <h2>6. AUTENTICAÇÃO E PAINEL ADMIN</h2>
+    <p>O sistema utiliza o <code>django.contrib.auth</code> para segurança.</p>
+    <ul>
+        <li><strong>Login:</strong> Customizado em <code>core/login.html</code>.</li>
+        <li><strong>Permissões:</strong> Proteção de rotas via <code>AdminStaffRequiredMixin</code>.</li>
+        <li><strong>Admin Customizado:</strong> Interface dedicada para revisão de documentos e aprovação de candidatas.</li>
+    </ul>
+
+    <hr>
+
+    <h2>7. CÁLCULOS E LÓGICA DE NEGÓCIO</h2>
+    <p>A lógica de ganhos da Odorata 2026 está implementada em Python (Backend) e JavaScript (Frontend).</p>
+    <h3>Algoritmo de Ganhos (Resumo):</h3>
+    <ul>
+        <li><strong>Taxa por Cadastro:</strong> R$ 25 (5-9 cads) ou R$ 50 (10+ cads).</li>
+        <li><strong>Bateu Levou:</strong> Premiação fixa por faixa de pedidos (ex: 30 pedidos = R$ 300).</li>
+        <li><strong>Comissão:</strong> Escalonada de 3% a 11% conforme volume de vendas.</li>
+    </ul>
+
+    <hr>
+
+    <h2>8. IA DORA (AGENTE INTELIGENTE)</h2>
+    <p>A assistente Dora utiliza a API do <strong>Groq</strong> (Llama 3.3). O diferencial técnico é a extração de dados via Regex para alimentar os cálculos reais de ganhos, evitando respostas genéricas.</p>
+
+    <hr>
+
+    <h2>9. CONFIGURAÇÕES E DEPENDÊNCIAS</h2>
+    <ul>
+        <li><strong>WhiteNoise:</strong> Gestão de arquivos estáticos.</li>
+        <li><strong>Pillow:</strong> Processamento de imagens/documentos.</li>
+        <li><strong>python-dotenv:</strong> Gestão de chaves de API.</li>
+    </ul>
+
+    <p style="text-align: center; font-size: 0.8rem; color: #777; margin-top: 50px;">
+        Documentação gerada automaticamente para o projeto estudos_ufg.
+    </p>
+</body>
+</html>

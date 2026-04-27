@@ -1,0 +1,210 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo | Odorata</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'core/css/guia.css' %}?v=1.2">
+    <style>
+        :root {
+            --admin-bg: #f8fafc;
+            --admin-card: #ffffff;
+            --admin-primary: #f58220;
+            --admin-text: #1e293b;
+            --admin-muted: #64748b;
+        }
+
+        body {
+            background-color: var(--admin-bg);
+            color: var(--admin-text);
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: #1e1e1e;
+            color: white;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h1 {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            color: var(--admin-primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 4rem 6%;
+            overflow-y: auto;
+        }
+
+        .header-title {
+            margin-bottom: 3rem;
+        }
+
+        .header-title h2 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header-title p {
+            color: var(--admin-muted);
+            font-size: 1.1rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .group-card {
+            background: var(--admin-card);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .group-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .group-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f1f5f9;
+            color: var(--admin-text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .link-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .link-item {
+            margin-bottom: 1.2rem;
+        }
+
+        .link-item a {
+            text-decoration: none;
+            color: var(--admin-text);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .link-item a:hover {
+            background: white;
+            border-color: var(--admin-primary);
+            color: var(--admin-primary);
+            box-shadow: 0 4px 12px rgba(245, 130, 32, 0.1);
+        }
+
+        .link-item a i {
+            font-size: 0.9rem;
+            opacity: 0.5;
+        }
+
+        .status-badge {
+            background: #e2e8f0;
+            color: #475569;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                padding: 1rem 2rem;
+            }
+            .main-content {
+                padding: 2rem 5%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h1>Odorata Admin</h1>
+        <div style="margin-top: auto;">
+            <p style="font-size: 0.8rem; opacity: 0.5;">Acesso Restrito</p>
+            <p style="font-weight: 600;">{{ user.username }}</p>
+            <a href="{% url 'logout' %}" style="color: #ef4444; text-decoration: none; font-size: 0.9rem; font-weight: 600; display: block; margin-top: 1rem;">
+                <i class="fas fa-sign-out-alt"></i> Sair do Painel
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header-title">
+            <h2>Mapa do Projeto</h2>
+            <p>Acesso rápido a todas as áreas e funcionalidades do sistema.</p>
+        </div>
+
+        <div class="dashboard-grid">
+            {% for group in links %}
+            <div class="group-card">
+                <h3>
+                    <i class="fas {% if forloop.counter == 1 %}fa-globe{% elif forloop.counter == 2 %}fa-user-tie{% else %}fa-cog{% endif %}"></i>
+                    {{ group.title }}
+                </h3>
+                <ul class="link-list">
+                    {% for item in group.urls %}
+                    <li class="link-item">
+                        <a href="{{ item.url }}" {% if 'http' in item.url %}target="_blank"{% endif %}>
+                            <span>{{ item.name }}</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div style="margin-top: 5rem; padding: 2rem; background: #333; color: white; border-radius: 20px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                <h4 style="margin: 0; font-size: 1.2rem;">Versão do Sistema</h4>
+                <p style="margin: 5px 0 0; opacity: 0.7;">v2.0 - 2026</p>
+            </div>
+            <img src="{% static 'core/images/logo_odorata_main.png' %}" alt="Odorata" style="height: 40px; filter: brightness(0) invert(1);">
+        </div>
+    </div>
+</body>
+
+</html>

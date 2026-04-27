@@ -1,0 +1,319 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise de Candidata: {{ candidata.nome_completo }} | ODORATA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Poppins', sans-serif;
+            padding-bottom: 5rem;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #2b2b2b 0%, #1a1a1a 100%);
+            margin-bottom: 2rem;
+        }
+
+        .detail-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #f58220;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #f58220;
+            padding-left: 1rem;
+        }
+
+        .data-label {
+            font-size: 0.8rem;
+            color: #777;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .data-value {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .doc-link {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+            border: 1px solid #eee;
+            margin-bottom: 1rem;
+        }
+
+        .doc-link:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .doc-icon {
+            font-size: 1.5rem;
+            color: #f58220;
+            margin-right: 1rem;
+        }
+
+        .action-panel {
+            background: #2b2b2b;
+            color: white;
+            border-radius: 20px;
+            padding: 2rem;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 100px;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-pendente { background: #fff3cd; color: #856404; }
+        .status-ajuste { background: #cce5ff; color: #004085; }
+        .status-aprovado { background: #d4edda; color: #155724; }
+        .status-reprovado { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <a href="{% url 'home' %}">
+                    <img src="{% static 'core/images/logo_odorata_main.png' %}" alt="Odorata" style="height: 35px; filter: brightness(0) invert(1);">
+                </a>
+                <div>
+                    <a href="{% url 'coordenadoras:admin_list' %}" class="btn btn-outline-light btn-sm me-2">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </a>
+                    <a href="{% url 'coordenadoras:admin_edit' candidata.pk %}" class="btn btn-warning btn-sm me-2 text-white">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a href="{% url 'coordenadoras:admin_delete' candidata.pk %}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja EXCLUIR este cadastro permanentemente?')">
+                        <i class="fas fa-trash"></i> Excluir
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <!-- Detalhes -->
+            <div class="col-lg-8">
+                <div class="detail-card">
+                    <div class="section-title">Dados Pessoais</div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="data-label">Nome Completo</div>
+                            <div class="data-value">{{ candidata.nome_completo }}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="data-label">CPF</div>
+                            <div class="data-value">{{ candidata.cpf }}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="data-label">E-mail</div>
+                            <div class="data-value">{{ candidata.email }}</div>
+                        </div>
+                        <div class="col-md-6">
+                            {% if candidata.foto %}
+                            <div class="data-label">Foto de Perfil</div>
+                            <div class="mb-3">
+                                <img src="{{ candidata.foto.url }}" alt="Foto" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #f58220;">
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="section-title mt-4">Endereço</div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="data-label">CEP</div>
+                            <div class="data-value">{{ candidata.cep }}</div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="data-label">Rua</div>
+                            <div class="data-value">{{ candidata.rua }}, {{ candidata.numero }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="data-label">Bairro</div>
+                            <div class="data-value">{{ candidata.bairro }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="data-label">Cidade</div>
+                            <div class="data-value">{{ candidata.cidade }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="data-label">Estado</div>
+                            <div class="data-value">{{ candidata.estado }}</div>
+                        </div>
+                        <div class="col-12">
+                            <div class="data-label">Complemento</div>
+                            <div class="data-value">{{ candidata.complemento|default:"---" }}</div>
+                        </div>
+                    </div>
+
+                    <div class="section-title mt-4">Dados Profissionais</div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="data-label">Empresa Anterior</div>
+                            <div class="data-value">
+                                {{ candidata.get_empresa_anterior_display }}
+                                {% if candidata.empresa_outra %}({{ candidata.empresa_outra }}){% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="data-label">Média Ganhos</div>
+                            <div class="data-value">R$ {{ candidata.media_ganhos }}</div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="data-label">Equipe (Consultoras)</div>
+                            <div class="data-value">{{ candidata.quantidade_consultoras }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <div class="section-title">Documentos Anexados</div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a href="{{ candidata.documento_rg_cnh.url }}" target="_blank" class="doc-link">
+                                <i class="fas fa-id-card doc-icon"></i>
+                                <div>
+                                    <div class="fw-bold">RG ou CNH</div>
+                                    <small class="text-muted">Clique para visualizar</small>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ candidata.documento_cpf.url }}" target="_blank" class="doc-link">
+                                <i class="fas fa-file-contract doc-icon"></i>
+                                <div>
+                                    <div class="fw-bold">CPF</div>
+                                    <small class="text-muted">Clique para visualizar</small>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ candidata.comprovante_endereco.url }}" target="_blank" class="doc-link">
+                                <i class="fas fa-home doc-icon"></i>
+                                <div>
+                                    <div class="fw-bold">Comprovante de Endereço</div>
+                                    <small class="text-muted">Clique para visualizar</small>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ candidata.comprovante_ganhos.url }}" target="_blank" class="doc-link">
+                                <i class="fas fa-money-bill-wave doc-icon"></i>
+                                <div>
+                                    <div class="fw-bold">Comprovante de Ganhos</div>
+                                    <small class="text-muted">Clique para visualizar</small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ações -->
+            <div class="col-lg-4">
+                <div class="action-panel">
+                    <div class="text-center">
+                        <span class="status-badge status-{{ candidata.status|lower }}">
+                            {{ candidata.get_status_display }}
+                        </span>
+                        {% if candidata.status == 'APROVADO' %}
+                        <div class="alert alert-info mt-3" style="background: rgba(13, 202, 240, 0.1); border: 1px solid #0dcaf0; color: #0dcaf0; border-radius: 12px; font-size: 0.85rem;">
+                            <i class="fas fa-key me-2"></i> <strong>Acesso Liberado</strong><br>
+                            Login: CPF (apenas números)<br>
+                            Senha: 6 primeiros dígitos do CPF
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <h5 class="mb-4 text-center">Atualizar Status</h5>
+                    
+                    <form action="{% url 'coordenadoras:admin_status' candidata.pk %}" method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Novo Status</label>
+                            <select name="status" id="statusSelect" class="form-select bg-dark text-white border-secondary">
+                                <option value="PENDENTE" {% if candidata.status == 'PENDENTE' %}selected{% endif %}>Pendente</option>
+                                <option value="AJUSTE" {% if candidata.status == 'AJUSTE' %}selected{% endif %}>Solicitar Ajuste</option>
+                                <option value="APROVADO" {% if candidata.status == 'APROVADO' %}selected{% endif %}>Aprovar</option>
+                                <option value="REPROVADO" {% if candidata.status == 'REPROVADO' %}selected{% endif %}>Reprovar</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Observação/Motivo</label>
+                            <textarea name="observacao" id="obsTextarea" class="form-control bg-dark text-white border-secondary" rows="4" placeholder="Descreva o motivo ou orientação..."></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning fw-bold">Salvar Alteração</button>
+                        </div>
+                    </form>
+
+                    <hr class="my-4 border-secondary">
+
+                    <div class="small">
+                        <div class="text-muted">Enviado em:</div>
+                        <div class="mb-2">{{ candidata.data_criacao|date:"d/m/Y H:i" }}</div>
+                        <div class="text-muted">Última atualização:</div>
+                        <div>{{ candidata.data_atualizacao|date:"d/m/Y H:i" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const statusSelect = document.getElementById('statusSelect');
+        const obsTextarea = document.getElementById('obsTextarea');
+
+        statusSelect.addEventListener('change', function() {
+            if (this.value === 'AJUSTE') {
+                obsTextarea.placeholder = "Descreva quais ajustes a candidata deve fazer...";
+                obsTextarea.required = true;
+            } else if (this.value === 'REPROVADO') {
+                obsTextarea.placeholder = "Descreva o motivo da reprovação...";
+                obsTextarea.required = true;
+            } else {
+                obsTextarea.placeholder = "Opcional: Adicione um comentário...";
+                obsTextarea.required = false;
+            }
+        });
+    </script>
+</body>
+
+</html>
