@@ -364,66 +364,62 @@
 
         <div class="mural-container">
             <div class="mural-track" id="mural-track">
-                <!-- Slide 01 - Bronze -->
-                <div class="mural-slide">
-                    <img src="{% static 'core/images/c01.png' %}" class="mural-photo" alt="Coordenadora 01">
-                    <div class="mural-info">
-                        <div class="rule-badge" style="background: #CD7F32; color: white; margin-bottom: 1rem; display: inline-block; padding: 0.5rem 1.5rem; border-radius: 50px; font-weight: 700; font-size: 0.8rem;">Elite Bronze</div>
-                        <h3 class="mural-quote">"Em busca de crescimento constante."</h3>
-                        <p class="mural-story">
-                            Mariana começou com apenas 5 consultoras e, com muita persistência, dobrou sua equipe em 3 campanhas. 
-                            Hoje, ela celebra seu primeiro Pin Bronze e foca no crescimento contínuo para o próximo semestre.
-                        </p>
+                <!-- Slide Único - 4 depoimentos -->
+                <div class="mural-slide four-per-view">
+                    <div class="testimonial-card">
+                        <img src="{% static 'core/images/c01.png' %}" class="mural-photo" alt="Coordenadora 01">
+                        <div class="mural-info">
+                            <div class="rule-badge" style="background: #CD7F32; color: white; margin-bottom: 1rem; display: inline-block; padding: 0.5rem 1.5rem; border-radius: 50px; font-weight: 700; font-size: 0.8rem;">Elite Bronze</div>
+                            <h3 class="mural-quote">"Em busca de crescimento constante."</h3>
+                            <p class="mural-story">
+                                Mariana começou com apenas 5 consultoras e, com muita persistência, dobrou sua equipe em 3 campanhas. 
+                                Hoje, ela celebra seu primeiro Pin Bronze e foca no crescimento contínuo para o próximo semestre.
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Slide 02 - Prata -->
-                <div class="mural-slide">
-                    <img src="{% static 'core/images/c02.png' %}" class="mural-photo" alt="Coordenadora 02">
-                    <div class="mural-info">
-                        <div class="rule-badge" style="background: #C0C0C0; color: #333; margin-bottom: 1rem; display: inline-block; padding: 0.5rem 1.5rem; border-radius: 50px; font-weight: 700; font-size: 0.8rem;">Elite Prata</div>
-                        <h3 class="mural-quote">"Construindo uma história de sucesso."</h3>
-                        <p class="mural-story">
-                            Depois de anos como consultora, Ana Paula assumiu o desafio da coordenação. 
-                            Com um plano de ação focado em novos cadastros, ela conquistou o nível Prata 
-                            e já é referência de liderança em sua região.
-                        </p>
+                    <div class="testimonial-card">
+                        <img src="{% static 'core/images/c02.png' %}" class="mural-photo" alt="Coordenadora 02">
+                        <div class="mural-info">
+                            <div class="rule-badge" style="background: #C0C0C0; color: #333; margin-bottom: 1rem; display: inline-block; padding: 0.5rem 1.5rem; border-radius: 50px; font-weight: 700; font-size: 0.8rem;">Elite Prata</div>
+                            <h3 class="mural-quote">"Construindo uma história de sucesso."</h3>
+                            <p class="mural-story">
+                                Depois de anos como consultora, Ana Paula assumiu o desafio da coordenação. 
+                                Com um plano de ação focado em novos cadastros, ela conquistou o nível Prata 
+                                e já é referência de liderança em sua região.
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Slide 03 - Ouro -->
-                <div class="mural-slide">
-                    <img src="{% static 'core/images/c03.png' %}" class="mural-photo" alt="Coordenadora 03">
-                    <div class="mural-info">
-                        <div class="rule-badge" style="background: linear-gradient(135deg, #FFD700 0%, #B38728 100%); color: #000; margin-bottom: 1rem; display: inline-block; padding: 0.5rem 1.5rem; border-radius: 50px; font-weight: 700; font-size: 0.8rem;">Elite Ouro</div>
-                        <h3 class="mural-quote">"O segredo é o resultado consistente."</h3>
-                        <p class="mural-story">
-                            Beatriz é o exemplo de consistência. Mantendo a alta performance de sua equipe, 
-                            ela conquistou o nível Ouro e hoje lidera com maestria uma das maiores divisões da marca.
-                        </p>
+                    <div class="testimonial-card">
+                        <img src="{% static 'core/images/c03.png' %}" class="mural-photo" alt="Coordenadora 03">
+                        <div class="mural-info">
+                            <div class="rule-badge" style="background: linear-gradient(135deg, #FFD700 0%, #B38728 100%); color: #000; margin-bottom: 1rem; display: inline-block; padding: 0.5rem 1.5rem; border-radius: 50px; font-weight: 700; font-size: 0.8rem;">Elite Ouro</div>
+                            <h3 class="mural-quote">"O segredo é o resultado consistente."</h3>
+                            <p class="mural-story">
+                                Beatriz é o exemplo de consistência. Mantendo a alta performance de sua equipe, 
+                                ela conquistou o nível Ouro e hoje lidera com maestria uma das maiores divisões da marca.
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Slide 04 - Bronze -->
-                <div class="mural-slide">
-                    <img src="{% static 'core/images/c04.png' %}" class="mural-photo" alt="Coordenadora 04">
-                    <div class="mural-info">
-                        <div class="rule-badge" style="background: #CD7F32; color: white; margin-bottom: 1rem; display: inline-block; padding: 0.5rem 1.5rem; border-radius: 50px; font-weight: 700; font-size: 0.8rem;">Elite Bronze</div>
-                        <h3 class="mural-quote">"Exemplo de ações fora da curva."</h3>
-                        <p class="mural-story">
-                            Carla transformou sua divisão com ações inovadoras em campo e parcerias locais. 
-                            Sua trajetória mostra que a criatividade aliada ao trabalho duro gera resultados extraordinários.
-                        </p>
+                    <div class="testimonial-card">
+                        <img src="{% static 'core/images/c04.png' %}" class="mural-photo" alt="Coordenadora 04">
+                        <div class="mural-info">
+                            <div class="rule-badge" style="background: #CD7F32; color: white; margin-bottom: 1rem; display: inline-block; padding: 0.5rem 1.5rem; border-radius: 50px; font-weight: 700; font-size: 0.8rem;">Elite Bronze</div>
+                            <h3 class="mural-quote">"Exemplo de ações fora da curva."</h3>
+                            <p class="mural-story">
+                                Carla transformou sua divisão com ações inovadoras em campo e parcerias locais. 
+                                Sua trajetória mostra que a criatividade aliada ao trabalho duro gera resultados extraordinários.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="mural-nav">
+        <div class="mural-nav" style="display: none;"> <!-- Ocultado já que só tem 1 slide no momento -->
             <div class="mural-dot active" onclick="gotoSlide(0)"></div>
-            <div class="mural-dot" onclick="gotoSlide(1)"></div>
-            <div class="mural-dot" onclick="gotoSlide(2)"></div>
-            <div class="mural-dot" onclick="gotoSlide(3)"></div>
         </div>
     </section>
 
@@ -480,7 +476,7 @@
 
         // Auto-play opcional
         setInterval(() => {
-            currentSlide = (currentSlide + 1) % 4;
+            currentSlide = (currentSlide + 1) % 2;
             gotoSlide(currentSlide);
         }, 8000);
     </script>

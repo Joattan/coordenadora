@@ -1539,7 +1539,7 @@ footer {
 
 .mural-container {
     position: relative;
-    max-width: 1000px;
+    max-width: 1400px;
     margin: 4rem auto;
     overflow: hidden;
     border-radius: 40px;
@@ -1561,6 +1561,38 @@ footer {
     flex-wrap: wrap;
 }
 
+.mural-slide.two-per-view {
+    gap: 2rem;
+    padding: 3rem;
+    align-items: stretch;
+}
+
+.mural-slide.four-per-view {
+    gap: 1.5rem;
+    padding: 2rem;
+    align-items: stretch;
+}
+
+.testimonial-card {
+    flex: 1;
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: #fff;
+    padding: 2rem 1.5rem;
+    border-radius: 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+    border: 1px solid #eee;
+    transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary-color);
+}
+
 .mural-photo {
     width: 300px;
     height: 380px;
@@ -1569,24 +1601,37 @@ footer {
     box-shadow: 0 20px 40px rgba(0,0,0,0.15);
 }
 
+.testimonial-card .mural-photo {
+    width: 150px;
+    height: 190px; /* Proporção de 300x380 */
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
 .mural-info {
     flex: 1;
     min-width: 300px;
 }
 
+.testimonial-card .mural-info {
+    min-width: auto;
+    flex: none;
+}
+
 .mural-quote {
-    font-size: 1.8rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: var(--dark-grey);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     line-height: 1.3;
 }
 
 .mural-story {
-    font-size: 1.1rem;
-    line-height: 1.6;
+    font-size: 0.95rem;
+    line-height: 1.5;
     color: #666;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     font-style: italic;
 }
 
@@ -1611,9 +1656,17 @@ footer {
     width: 30px;
 }
 
+@media (max-width: 1024px) {
+    .mural-slide.four-per-view { flex-wrap: wrap; }
+    .testimonial-card { min-width: calc(50% - 2rem); }
+}
+
 @media (max-width: 768px) {
     .mural-slide { padding: 2rem; gap: 2rem; text-align: center; }
+    .mural-slide.two-per-view, .mural-slide.four-per-view { padding: 1.5rem; gap: 1.5rem; }
     .mural-photo { width: 100%; height: 300px; }
+    .testimonial-card { min-width: 100%; }
+    .testimonial-card .mural-photo { width: 140px; height: 177px; }
 }
 
 
