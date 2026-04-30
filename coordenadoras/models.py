@@ -18,6 +18,7 @@ class CandidataCoordenadora(models.Model):
 
     # Dados Pessoais
     cpf = models.CharField('CPF', max_length=14, unique=True)
+    cod_protheus = models.CharField('Código Protheus', max_length=50, blank=True, null=True, unique=True)
     nome_completo = models.CharField('Nome Completo', max_length=255)
     email = models.EmailField('E-mail', max_length=255, default="")
     foto = models.ImageField('Foto (Opcional)', upload_to='fotos/candidatas/', blank=True, null=True)
@@ -58,3 +59,28 @@ class CandidataCoordenadora(models.Model):
 
     def __str__(self):
         return f"{self.nome_completo} ({self.cpf})"
+
+class PedidoProtheus(models.Model):
+    campanha = models.CharField('Campanha', max_length=10, db_index=True)
+    ano = models.CharField('Ano', max_length=4)
+    setor = models.CharField('Setor', max_length=10)
+    revendedora = models.CharField('Cód. Revendedora', max_length=50) # CODIGO na API
+    emissao = models.CharField('Data Emissão', max_length=10) # Manter como texto para evitar erros de conversão do Protheus
+    pedido = models.CharField('Nº Pedido', max_length=50)
+    produto = models.CharField('Cód. Produto', max_length=50)
+    quantidade = models.FloatField('Quantidade', default=0)
+    valor_financeiro = models.DecimalField('Valor Financeiro', max_digits=15, decimal_places=2, default=0)
+    coordenadora = models.CharField('Cód. Coordenadora', max_length=50, db_index=True) # CODCOORD
+    tipo = models.CharField('Tipo', max_length=50, null=True, blank=True)
+    tes = models.CharField('TES', max_length=10, null=True, blank=True)
+    status_item = models.CharField('Status', max_length=10)
+    data_importacao = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('pedido', 'produto')
+        verbose_name = 'Pedido Protheus'
+        verbose_name_plural = 'Pedidos Protheus'
+        ordering = ['-emissao', '-pedido']
+
+    def __str__(self):
+        return f"Pedido {self.pedido} - Prod {self.produto}"

@@ -104,6 +104,185 @@
             gap: 2rem;
             margin-top: 3rem;
         }
+
+        /* Premium Cards (based on reference) */
+        .premium-card {
+            position: relative;
+            height: 420px;
+            border-radius: 24px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2.5rem;
+            color: white;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .premium-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, 
+                rgba(0, 0, 0, 0.95) 0%, 
+                rgba(0, 0, 0, 0.4) 50%, 
+                rgba(0, 0, 0, 0.1) 100%);
+            z-index: 1;
+        }
+
+        .premium-card .card-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            transition: transform 0.6s ease;
+        }
+
+        .premium-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .premium-card:hover .card-bg {
+            transform: scale(1.1);
+        }
+
+        .premium-card .card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .premium-card .tag {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: block;
+            color: var(--primary-color);
+        }
+
+        .premium-card h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .premium-card p {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .premium-card .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            margin-bottom: 1.2rem;
+        }
+
+        .premium-card .footer-highlight {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #8CC63F;
+            display: block;
+        }
+
+        .premium-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        /* Formal Cards for Regulation */
+        .formal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .formal-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .formal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            border-color: var(--primary-color);
+        }
+
+        .formal-card .icon-box {
+            width: 55px;
+            height: 55px;
+            background: var(--nude);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            font-size: 1.6rem;
+            transition: all 0.3s ease;
+        }
+
+        .formal-card:hover .icon-box {
+            background: var(--primary-gradient);
+            color: white;
+            transform: rotate(-5deg) scale(1.1);
+        }
+
+        .formal-card h3 {
+            font-size: 1.35rem;
+            color: var(--dark-grey);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .formal-card p {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .formal-card .badge-formal {
+            margin-top: auto;
+            padding-top: 1.5rem;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .formal-card .badge-formal::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--primary-color);
+            border-radius: 50%;
+        }
     </style>
 
 </head>
@@ -233,61 +412,76 @@
             <p>Ferramentas e recompensas exclusivas para impulsionar sua carreira.</p>
         </div>
 
-        <div class="benefit-grid">
-            <div class="benefit-card">
-                <i class="fas fa-tools benefit-icon"></i>
-                <div>
-                    <h4>Material de Apoio</h4>
-                    <p>Ferramentas e estratégias para brilhar em campo.</p>
+        <div class="premium-grid">
+            <!-- Material de Apoio -->
+            <div class="premium-card">
+                <img src="{% static 'core/images/ind01.png' %}" class="card-bg" alt="Apoio">
+                <div class="card-content">
+                    <span class="tag" style="color: var(--primary-color);">Suporte</span>
+                    <h3>Material de Apoio</h3>
+                    <p>Ferramentas e estratégias exclusivas para brilhar em campo e liderar com excelência.</p>
+                    <div class="divider"></div>
+                    <span class="footer-highlight">Foco em Resultados</span>
                 </div>
             </div>
-            <div class="benefit-card">
-                <i class="fas fa-graduation-cap benefit-icon"></i>
-                <div>
-                    <h4>Treinamentos Premium</h4>
-                    <p>Workshops de produtos, vendas, marketing e liderança.</p>
+
+            <!-- Treinamento -->
+            <div class="premium-card">
+                <img src="{% static 'core/images/Cad01.png' %}" class="card-bg" alt="Treinamento">
+                <div class="card-content">
+                    <span class="tag" style="color: var(--secondary-color);">Educação</span>
+                    <h3>Workshops Premium</h3>
+                    <p>Treinamentos avançados de produtos, marketing e liderança com especialistas.</p>
+                    <div class="divider"></div>
+                    <span class="footer-highlight">Desenvolvimento Real</span>
                 </div>
             </div>
-            <div class="benefit-card">
-                <i class="fas fa-bullhorn benefit-icon"></i>
-                <div>
-                    <h4>Participação em Campanhas</h4>
-                    <p>Destaque em materiais oficiais da marca e reconhecimento público.</p>
+
+            <!-- Bônus Extra -->
+            <div class="premium-card">
+                <img src="{% static 'core/images/Cad02.png' %}" class="card-bg" alt="Bônus">
+                <div class="card-content">
+                    <span class="tag" style="color: #8CC63F;">Ganhos</span>
+                    <h3>Bônus Extra</h3>
+                    <p>Receba R$ 200 adicionais por campanha enviando de 100 a 299 pedidos.</p>
+                    <div class="divider"></div>
+                    <span class="footer-highlight">+ R$ 200,00 / Campanha</span>
                 </div>
             </div>
-            <div class="benefit-card">
-                <i class="fas fa-comments benefit-icon"></i>
-                <div>
-                    <h4>Comunicação Direta</h4>
-                    <p>Analista exclusiva e contato via WhatsApp com a diretoria.</p>
+
+            <!-- Bônus Premium -->
+            <div class="premium-card">
+                <img src="{% static 'core/images/Cad03.png' %}" class="card-bg" alt="Premium">
+                <div class="card-content">
+                    <span class="tag" style="color: var(--gold-color);">Exclusivo</span>
+                    <h3>Bônus Premium</h3>
+                    <p>Supere a marca de 400 pedidos e garanta R$ 300 extras em sua conta.</p>
+                    <div class="divider"></div>
+                    <span class="footer-highlight">+ R$ 300,00 Adicionais</span>
                 </div>
             </div>
-            <div class="benefit-card">
-                <i class="fas fa-gift benefit-icon"></i>
-                <div>
-                    <h4>Premiação Surpresa</h4>
-                    <p>Sorteios mensais com experiências e vale-compras.</p>
+
+            <!-- Comunicação -->
+            <div class="premium-card">
+                <img src="{% static 'core/images/elite_hero_outdoor.png' %}" class="card-bg" alt="Comunicação">
+                <div class="card-content">
+                    <span class="tag">Conexão</span>
+                    <h3>Analista Exclusiva</h3>
+                    <p>Contato direto via WhatsApp e suporte prioritário com a diretoria Odorata.</p>
+                    <div class="divider"></div>
+                    <span class="footer-highlight">Canal Direto</span>
                 </div>
             </div>
-            <div class="benefit-card">
-                <i class="fas fa-medal benefit-icon"></i>
-                <div>
-                    <h4>Incentivos Exclusivos</h4>
-                    <p>Recompensas únicas para quem supera resultados.</p>
-                </div>
-            </div>
-            <div class="benefit-card" style="background: var(--gold-gradient); color: #333;">
-                <i class="fas fa-plus-circle benefit-icon" style="color: #333;"></i>
-                <div>
-                    <h4 style="color: #333;">Bônus Extra</h4>
-                    <p style="color: #333;">R$ 200 por campanha, enviando de 100 a 299 pedidos.</p>
-                </div>
-            </div>
-            <div class="benefit-card" style="background: #333; color: #fff;">
-                <i class="fas fa-star benefit-icon" style="color: var(--gold-color);"></i>
-                <div>
-                    <h4 style="color: #fff;">Bônus Premium</h4>
-                    <p style="color: #ccc;">R$ 300 adicionais para quem ultrapassa 400 pedidos.</p>
+
+            <!-- Premiações -->
+            <div class="premium-card">
+                <img src="{% static 'core/images/elite.png' %}" class="card-bg" alt="Prêmios">
+                <div class="card-content">
+                    <span class="tag" style="color: var(--accent-color);">Reconhecimento</span>
+                    <h3>Incentivos Únicos</h3>
+                    <p>Participação em sorteios mensais de experiências, viagens e prêmios surpresa.</p>
+                    <div class="divider"></div>
+                    <span class="footer-highlight">Você no Topo</span>
                 </div>
             </div>
         </div>
@@ -326,65 +520,65 @@
             <div style="margin-top: 4rem;">
                 <span
                     style="font-weight: 700; border-bottom: 2px solid var(--gold-color); padding-bottom: 5px;">CELEBRAÇÃO
-                    • RECONHECIMENTO • SUCESSO</span>
+                    • RECONHECIMENTO �    <section id="regulamento" style="padding: 8rem 10%; background-color: #fafafa;">
+        <div class="section-title">
+            <h2 class="text-gradient">Regulamento</h2>
+            <p>Conheça as diretrizes oficiais para participação e permanência.</p>
+        </div>
+
+        <div class="formal-grid">
+            <!-- Entrada -->
+            <div class="formal-card">
+                <div class="icon-box">
+                    <i class="fas fa-door-open"></i>
+                </div>
+                <h3>Entrada no Programa</h3>
+                <p>A entrada no Programa Elite da Beleza ocorre automaticamente ao atingir 100 pedidos faturados em uma única campanha.</p>
+                <div class="badge-formal">Início Automático</div>
+            </div>
+
+            <!-- Permanência -->
+            <div class="formal-card">
+                <div class="icon-box">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+                <h3>Permanência na Elite</h3>
+                <p>Para manter o status, benefícios e premiações, é indispensável o envio mínimo de 100 pedidos em todas as campanhas.</p>
+                <div class="badge-formal">Manutenção Mensal</div>
+            </div>
+
+            <!-- Saída -->
+            <div class="formal-card">
+                <div class="icon-box">
+                    <i class="fas fa-circle-exclamation"></i>
+                </div>
+                <h3>Critério de Saída</h3>
+                <p>Ao realizar 99 pedidos ou menos, a coordenadora perde automaticamente o vínculo com o programa e seus benefícios.</p>
+                <div class="badge-formal">Regra de Ouro</div>
+            </div>
+
+            <!-- Vigência -->
+            <div class="formal-card">
+                <div class="icon-box">
+                    <i class="fas fa-calendar-days"></i>
+                </div>
+                <h3>Vigência do Programa</h3>
+                <p>O Programa Elite da Beleza possui vigência estabelecida da Campanha 10/2025 até a Campanha 10/2026.</p>
+                <div class="badge-formal">Ciclo Anual</div>
+            </div>
+
+            <!-- Atualizações -->
+            <div class="formal-card">
+                <div class="icon-box">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <h3>Atualizações</h3>
+                <p>As regras podem ser alteradas ou o programa encerrado pela Odorata com aviso prévio mediante comunicado oficial.</p>
+                <div class="badge-formal">Transparência</div>
             </div>
         </div>
     </section>
-
-    <!-- 7. Seção Regulamento -->
-    <section id="regulamento" style="padding: 8rem 10%;">
-        <div class="section-title">
-            <h2 class="text-gradient">Regulamento</h2>
-            <p>Conheça as regras para entrar e permanecer na elite.</p>
-        </div>
-
-        <div class="accordion-container">
-            <div class="accordion-item">
-                <div class="accordion-header">
-                    <span>Entrada no Programa</span>
-                    <i class="fas fa-plus"></i>
-                </div>
-                <div class="accordion-content">
-                    <p>A entrada no programa acontece automaticamente quando a coordenadora alcança 100 pedidos
-                        faturados em uma campanha.</p>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <div class="accordion-header">
-                    <span>Permanência na Elite</span>
-                    <i class="fas fa-plus"></i>
-                </div>
-                <div class="accordion-content">
-                    <p>Para permanecer no programa, é necessário manter o envio mínimo de 100 pedidos por campanha.</p>
-                </div>
-            </div>
-            <div class="accordion-item" style="border-left: 4px solid var(--accent-color);">
-                <div class="accordion-header">
-                    <span>Critério de Saída</span>
-                    <i class="fas fa-plus"></i>
-                </div>
-                <div class="accordion-content">
-                    <p>Se a coordenadora realizar 99 pedidos ou menos em qualquer campanha, ela perde automaticamente
-                        todos os benefícios da Elite da Beleza.</p>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <div class="accordion-header">
-                    <span>Vigência do Programa</span>
-                    <i class="fas fa-plus"></i>
-                </div>
-                <div class="accordion-content">
-                    <p>O programa Elite da Beleza tem vigência da Campanha 10/2025 até a Campanha 10/2026.</p>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <div class="accordion-header">
-                    <span>Atualizações e Encerramento</span>
-                    <i class="fas fa-plus"></i>
-                </div>
-                <div class="accordion-content">
-                    <p>As regras do programa podem ser alteradas ou o programa pode ser encerrado pela Odorata sem aviso
-                        prévio.</p>
+highlight">Transparência</span>
                 </div>
             </div>
         </div>

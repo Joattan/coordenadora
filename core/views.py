@@ -11,6 +11,8 @@ import os
 import google.generativeai as genai
 from openai import OpenAI
 from dotenv import load_dotenv
+from .protheus_api import fetch_protheus_data, summarize_performance, sync_protheus_to_db
+from coordenadoras.models import PedidoProtheus
 
 load_dotenv()
 
@@ -48,7 +50,7 @@ def elite(request):
     if candidata:
         primeiro_nome = candidata.nome_completo.split()[0]
     
-    return render(request, 'core/elite.html', {
+    return render(request, 'core/elite_new.html', {
         'candidata': candidata,
         'primeiro_nome': primeiro_nome
     })
@@ -101,11 +103,16 @@ def calcular_ganhos_odorata(cad, ped, camp, ticket=300):
     elif ped >= 70: perc = 5
     bonus_fat = faturamento * perc / 100
 
-    total = total_cad + bonus_camp_cad + bateu + bp + bonus_fat
+    # 6. Bônus Dobro (30+ cadastros)
+    bonus_dobro = 0
+    if cad >= 30:
+        bonus_dobro = 500
+
+    total = total_cad + bonus_camp_cad + bateu + bp + bonus_fat + bonus_dobro
     
     return {
         'total': total,
-        'detalhes': f"{cad} cads (R$ {rate_cad}/cada), {ped} pedidos, Campanha {camp}, Comissão {perc}%, Bônus Camp {bp}, Bateu Levou {bateu}"
+        'detalhes': f"{cad} cads (R$ {rate_cad}/cada), {ped} pedidos, Campanha {camp}, Comissão {perc}%, Bônus Camp {bp}, Bateu Levou {bateu}, Bônus Dobro {bonus_dobro}"
     }
 
 @csrf_exempt
@@ -165,14 +172,18 @@ def chat_agente(request):
 
     # System Prompt (Dora - Mentora e Especialista)
     system_prompt = (
-        "Você é a Dora da Odorata. Responda de forma curta (máx 3-4 linhas).\n\n"
-        "PROTOCOLOS DE CONVERSA:\n"
-        "- SAUDAÇÃO: Responda apenas 'Olá! Como posso te ajudar?' ou 'Boa tarde! Como posso ajudar?'. Proibido dar dicas de venda no 'Oi'.\n"
-        "- DICAS DE GANHO: Só dê dicas se o usuário pedir. Use o manual de WhatsApp, catálogo digital e perfumaria.\n"
-        "- CÁLCULOS: Use os dados do 'CALCULADORA (DADOS REAIS)' e sempre dê a SOMA TOTAL FINAL.\n\n"
-        "MANUAL TÉCNICO:\n"
-        "- CADASTROS: 5-9 (R$ 25) | 10+ (R$ 50).\n"
-        "- BÔNUS: C1 (30 ped=R$ 200) | Bateu Levou (30=300, 50=500, 80=800).\n"
+        "Você é a Dora da Odorata. Responda de forma curta (máx 3-4 linhas) e profissional.\n\n"
+        "REQUISITOS PARA SER COORDENADORA:\n"
+        "- CNPJ ativo e contrato assinado.\n"
+        "- Enviar documentos pessoais, conta corrente e ter ensino médio.\n"
+        "- Residir na cidade base. NÃO exige exclusividade.\n\n"
+        "REGRAS DE NEGÓCIO:\n"
+        "- CADASTROS: 5-9 (R$ 25) | 10+ (R$ 50) | Meta 15+ (Bônus R$ 300-600) | 30+ (Bônus Dobro R$ 500).\n"
+        "- BATEU LEVOU (pedidos): 30 (300) | 50 (500) | 80 (800) | 150 (1200) | 200 (1500) | 300 (2000).\n"
+        "- COMISSÃO: 3% a 11% sobre o faturamento total.\n\n"
+        "PROTOCOLOS:\n"
+        "- SAUDAÇÃO: Apenas 'Olá! Como posso te ajudar?'. Proibido dar dicas no 'Oi'.\n"
+        "- CÁLCULOS: Use sempre os dados do 'CALCULADORA (DADOS REAIS)' e dê a SOMA TOTAL FINAL.\n"
         + calc_context
     )
 
@@ -222,6 +233,7 @@ def admin_dashboard(request):
         {'title': 'Programas e Ferramentas', 'urls': [
             {'name': 'Elite da Beleza', 'url': '/elite/'},
             {'name': 'Agente Dora (Chat Inteligente)', 'url': '/chat/'},
+            {'name': 'Performance de Vendas (Protheus)', 'url': '/performance/'},
         ]},
         {'title': 'Administração e Segurança', 'urls': [
             {'name': 'Listagem Geral de Candidatas', 'url': '/coordenadoras/admin/listagem/'},
@@ -230,4 +242,90 @@ def admin_dashboard(request):
         ]},
     ]
     return render(request, 'core/admin_dashboard.html', {'links': links})
+
+@login_required
+def performance_vendas(request):
+    camp = request.GET.get('camp', '0126')
+    mesref = request.GET.get('mesref', '01')
+    force_sync = request.GET.get('sync') == '1'
+    
+    # Recupera o código protheus da coordenadora logada
+    cod_protheus = None
+    try:
+        # Tenta buscar pelo CPF (username)
+        candidata = CandidataCoordenadora.objects.get(cpf=request.user.username)
+        cod_protheus = candidata.cod_protheus
+    except CandidataCoordenadora.DoesNotExist:
+        # Se não encontrar, tenta buscar se o usuário tem um perfil vinculado de outra forma ou se é admin
+        pass
+
+    # Verifica se já temos dados no banco local para essa campanha
+    # Filtro base por campanha
+    pedidos_locais = PedidoProtheus.objects.filter(campanha=camp)
+    
+    # Se não for superusuário, OBRIGATORIAMENTE filtra pelo código dela
+    if not request.user.is_superuser:
+        if cod_protheus:
+            pedidos_locais = pedidos_locais.filter(coordenadora=cod_protheus)
+        else:
+            # Se não tem código vinculado, não vê nada por segurança
+            pedidos_locais = pedidos_locais.none()
+
+    novos_itens = 0
+    # Se não houver dados ou o usuário forçar a sincronização
+    # Importante: A sincronização baixa TUDO da API, o filtro acontece na exibição acima
+    if force_sync or not pedidos_locais.exists():
+        raw_data = fetch_protheus_data(camp=camp, mesref=mesref)
+        if raw_data:
+            novos_itens = sync_protheus_to_db(raw_data)
+            # Recarrega do banco após sincronizar (aplicando os mesmos filtros)
+            pedidos_locais = PedidoProtheus.objects.filter(campanha=camp)
+            if not request.user.is_superuser:
+                if cod_protheus:
+                    pedidos_locais = pedidos_locais.filter(coordenadora=cod_protheus)
+                else:
+                    pedidos_locais = pedidos_locais.none()
+
+    # Prepara o sumário com base nos dados do banco local e filtros DAX
+    # Regra: Faturamento > 0, Tipo = Pedido Normal, Status = Atendido (A)
+    pedidos_validados = pedidos_locais.filter(
+        valor_financeiro__gt=0,
+        tipo="Pedido Normal",
+        status_item="A"
+    )
+
+    total_pedidos_itens = pedidos_validados.count()
+    # Clientes = DISTINCTCOUNT(Revendedora + Campanha)
+    total_clientes = pedidos_validados.values('revendedora', 'campanha').distinct().count()
+    
+    total_valor_financeiro = pedidos_validados.aggregate(models.Sum('valor_financeiro'))['valor_financeiro__sum'] or 0
+    ticket_medio = total_valor_financeiro / total_clientes if total_clientes > 0 else 0
+    
+    # Formata para o template (estilo raw_data que o template espera)
+    display_data = []
+    for p in pedidos_validados.order_by('-emissao', '-pedido')[:100]:
+        display_data.append({
+            'PEDIDO': p.pedido,
+            'EMISSAO': p.emissao,
+            'SETOR': p.setor,
+            'CODCOORD': p.coordenadora,
+            'VALOR_FINAN': p.valor_financeiro,
+            'STATUS_ITEM': p.status_item,
+            'TIPO': p.tipo,
+            'TES': p.tes
+        })
+
+    summary = {
+        "total_pedidos": total_clientes, # Agora usamos a contagem de clientes reais
+        "total_itens": total_pedidos_itens,
+        "total_valor_financeiro": total_valor_financeiro,
+        "raw_data": display_data
+    }
+        
+    return render(request, 'core/performance.html', {
+        'summary': summary,
+        'ticket_medio': ticket_medio,
+        'camp': camp,
+        'novos_itens': novos_itens
+    })
 

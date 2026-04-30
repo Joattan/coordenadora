@@ -62,52 +62,105 @@
         }
 
         .section-block {
-            margin-bottom: 3rem;
+            position: relative;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.4);
+            margin-bottom: 4rem;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .section-block.with-bg {
+            background: none;
+            color: white;
+        }
+
+        .section-block.with-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 100%);
+            z-index: 1;
+        }
+
+        .section-block .block-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        .section-block .block-content {
+            position: relative;
+            z-index: 2;
         }
 
         .section-block h2 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
             color: var(--primary-color);
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 0.5rem;
+            gap: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 1rem;
+        }
+
+        .section-block.with-bg h2 {
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .form-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-        }
-
-        .form-grid.full {
-            grid-template-columns: 1fr;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
+            gap: 2rem;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: #555;
+        }
+
+        .section-block.with-bg .form-group label {
+            color: rgba(255,255,255,0.9);
         }
 
         .form-control,
         .form-select {
             width: 100%;
-            padding: 0.8rem 1rem;
-            border-radius: 12px;
-            border: 1.5px solid #ddd;
+            padding: 1rem 1.2rem;
+            border-radius: 14px;
+            border: 2.5px solid #eee;
             font-family: inherit;
             transition: all 0.3s ease;
             box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+
+        .section-block.with-bg .form-control,
+        .section-block.with-bg .form-select {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-block.with-bg .form-control:focus,
+        .section-block.with-bg .form-select:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--primary-color);
         }
 
         .form-control:focus,
@@ -224,106 +277,118 @@
                 {% csrf_token %}
 
                 <!-- Dados Pessoais -->
-                <div class="section-block">
-                    <h2><i class="fas fa-user"></i> Dados Pessoais</h2>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="{{ form.cpf.id_for_label }}">CPF</label>
-                            {{ form.cpf }}
-                            <div id="cpf-error" class="error-message"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="{{ form.nome_completo.id_for_label }}">Nome Completo</label>
-                            {{ form.nome_completo }}
-                        </div>
-                        <div class="form-group">
-                            <label for="{{ form.email.id_for_label }}">E-mail</label>
-                            {{ form.email }}
-                        </div>
-                        <div class="form-group">
-                            <label for="{{ form.foto.id_for_label }}">Foto de Perfil (Opcional)</label>
-                            {{ form.foto }}
+                <div class="section-block with-bg">
+                    <img src="{% static 'core/images/ind01.png' %}" class="block-bg" alt="Pessoal">
+                    <div class="block-content">
+                        <h2><i class="fas fa-user"></i> Dados Pessoais</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="{{ form.cpf.id_for_label }}">CPF</label>
+                                {{ form.cpf }}
+                                <div id="cpf-error" class="error-message"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.nome_completo.id_for_label }}">Nome Completo</label>
+                                {{ form.nome_completo }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.email.id_for_label }}">E-mail</label>
+                                {{ form.email }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.foto.id_for_label }}">Foto de Perfil (Opcional)</label>
+                                {{ form.foto }}
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Endereço -->
-                <div class="section-block">
-                    <h2><i class="fas fa-map-marker-alt"></i> Endereço</h2>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="{{ form.cep.id_for_label }}">CEP</label>
-                            {{ form.cep }}
-                        </div>
-                        <div class="form-group">
-                            <label for="{{ form.rua.id_for_label }}">Rua</label>
-                            {{ form.rua }}
-                        </div>
-                        <div class="form-group">
-                            <label for="{{ form.numero.id_for_label }}">Número</label>
-                            {{ form.numero }}
-                        </div>
-                        <div class="form-group">
-                            <label for="{{ form.bairro.id_for_label }}">Bairro</label>
-                            {{ form.bairro }}
-                        </div>
-                        <div class="form-group">
-                            <label for="{{ form.cidade.id_for_label }}">Cidade</label>
-                            {{ form.cidade }}
-                        </div>
-                        <div class="form-group">
-                            <label for="{{ form.estado.id_for_label }}">Estado (UF)</label>
-                            {{ form.estado }}
-                        </div>
-                        <div class="form-group" style="grid-column: span 2;">
-                            <label for="{{ form.complemento.id_for_label }}">Complemento</label>
-                            {{ form.complemento }}
+                <div class="section-block with-bg">
+                    <img src="{% static 'core/images/Cad01.png' %}" class="block-bg" alt="Endereço">
+                    <div class="block-content">
+                        <h2><i class="fas fa-map-marker-alt"></i> Endereço</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="{{ form.cep.id_for_label }}">CEP</label>
+                                {{ form.cep }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.rua.id_for_label }}">Rua</label>
+                                {{ form.rua }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.numero.id_for_label }}">Número</label>
+                                {{ form.numero }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.bairro.id_for_label }}">Bairro</label>
+                                {{ form.bairro }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.cidade.id_for_label }}">Cidade</label>
+                                {{ form.cidade }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.estado.id_for_label }}">Estado (UF)</label>
+                                {{ form.estado }}
+                            </div>
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label for="{{ form.complemento.id_for_label }}">Complemento</label>
+                                {{ form.complemento }}
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Dados Profissionais -->
-                <div class="section-block">
-                    <h2><i class="fas fa-briefcase"></i> Dados Profissionais</h2>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="{{ form.empresa_anterior.id_for_label }}">Empresa Anterior</label>
-                            {{ form.empresa_anterior }}
-                        </div>
-                        <div class="form-group" id="outra-empresa-group" style="display: none;">
-                            <label for="{{ form.empresa_outra.id_for_label }}">Qual empresa?</label>
-                            {{ form.empresa_outra }}
-                        </div>
-                        <div class="form-group">
-                            <label for="{{ form.media_ganhos.id_for_label }}">Média de Ganhos (R$)</label>
-                            {{ form.media_ganhos }}
-                        </div>
-                        <div class="form-group">
-                            <label for="{{ form.quantidade_consultoras.id_for_label }}">Qtd. de Consultoras na Equipe</label>
-                            {{ form.quantidade_consultoras }}
+                <div class="section-block with-bg">
+                    <img src="{% static 'core/images/Cad02.png' %}" class="block-bg" alt="Profissional">
+                    <div class="block-content">
+                        <h2><i class="fas fa-briefcase"></i> Dados Profissionais</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="{{ form.empresa_anterior.id_for_label }}">Empresa Anterior</label>
+                                {{ form.empresa_anterior }}
+                            </div>
+                            <div class="form-group" id="outra-empresa-group" style="display: none;">
+                                <label for="{{ form.empresa_outra.id_for_label }}">Qual empresa?</label>
+                                {{ form.empresa_outra }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.media_ganhos.id_for_label }}">Média de Ganhos (R$)</label>
+                                {{ form.media_ganhos }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.quantidade_consultoras.id_for_label }}">Qtd. de Consultoras na Equipe</label>
+                                {{ form.quantidade_consultoras }}
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Documentos -->
-                <div class="section-block">
-                    <h2><i class="fas fa-file-upload"></i> Documentos Obrigatórios</h2>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="{{ form.documento_rg_cnh.id_for_label }}">RG ou CNH</label>
-                            {{ form.documento_rg_cnh }}
-                        </div>
-                        <div class="form-group">
-                            <label for="{{ form.documento_cpf.id_for_label }}">CPF</label>
-                            {{ form.documento_cpf }}
-                        </div>
-                        <div class="form-group">
-                            <label for="{{ form.comprovante_endereco.id_for_label }}">Comprovante de Endereço</label>
-                            {{ form.comprovante_endereco }}
-                        </div>
-                        <div class="form-group">
-                            <label for="{{ form.comprovante_ganhos.id_for_label }}">Comprovante de Ganhos</label>
-                            {{ form.comprovante_ganhos }}
+                <div class="section-block with-bg">
+                    <img src="{% static 'core/images/Cad03.png' %}" class="block-bg" alt="Documentos">
+                    <div class="block-content">
+                        <h2><i class="fas fa-file-upload"></i> Documentos Obrigatórios</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="{{ form.documento_rg_cnh.id_for_label }}">RG ou CNH</label>
+                                {{ form.documento_rg_cnh }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.documento_cpf.id_for_label }}">CPF</label>
+                                {{ form.documento_cpf }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.comprovante_endereco.id_for_label }}">Comprovante de Endereço</label>
+                                {{ form.comprovante_endereco }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.comprovante_ganhos.id_for_label }}">Comprovante de Ganhos</label>
+                                {{ form.comprovante_ganhos }}
+                            </div>
                         </div>
                     </div>
                 </div>

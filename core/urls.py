@@ -7,4 +7,5 @@ urlpatterns = [
     path('seja-coordenadora/', views.seja_coordenadora, name='seja_coordenadora'),
     path('chat/', views.chat_agente, name='chat_agente'),
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('performance/', views.performance_vendas, name='performance_vendas'),
 ]

@@ -13,15 +13,17 @@
     <link rel="stylesheet" href="{% static 'core/css/guia.css' %}?v=1.2">
     <style>
         :root {
-            --admin-bg: #f8fafc;
-            --admin-card: #ffffff;
+            --admin-bg: #0f172a;
+            --admin-card: rgba(255, 255, 255, 0.05);
             --admin-primary: #f58220;
-            --admin-text: #1e293b;
-            --admin-muted: #64748b;
+            --admin-text: #f8fafc;
+            --admin-muted: #94a3b8;
         }
 
         body {
             background-color: var(--admin-bg);
+            background-image: radial-gradient(circle at top right, rgba(245, 130, 32, 0.15), transparent),
+                              radial-gradient(circle at bottom left, rgba(0, 0, 0, 0.5), transparent);
             color: var(--admin-text);
             font-family: 'Poppins', sans-serif;
             margin: 0;
@@ -30,72 +32,84 @@
         }
 
         .sidebar {
-            width: 280px;
-            background: #1e1e1e;
+            width: 300px;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
             color: white;
-            padding: 2rem;
+            padding: 3rem 2rem;
             display: flex;
             flex-direction: column;
-            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .sidebar h1 {
-            font-size: 1.2rem;
-            margin-bottom: 3rem;
+            font-size: 1.4rem;
+            margin-bottom: 4rem;
             color: var(--admin-primary);
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
+            font-weight: 800;
         }
 
         .main-content {
             flex: 1;
-            padding: 4rem 6%;
+            padding: 5rem 8%;
             overflow-y: auto;
         }
 
         .header-title {
-            margin-bottom: 3rem;
+            margin-bottom: 4rem;
         }
 
         .header-title h2 {
-            font-size: 2.2rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
+            font-size: 2.8rem;
+            margin-bottom: 0.8rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .header-title p {
             color: var(--admin-muted);
-            font-size: 1.1rem;
+            font-size: 1.2rem;
         }
 
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 3rem;
         }
 
         .group-card {
             background: var(--admin-card);
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         .group-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            border-color: rgba(245, 130, 32, 0.4);
+            box-shadow: 0 30px 60px rgba(245, 130, 32, 0.1);
         }
 
         .group-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #f1f5f9;
-            color: var(--admin-text);
+            font-size: 1.5rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
+        }
+
+        .group-card h3 i {
+            color: var(--admin-primary);
         }
 
         .link-list {
@@ -105,54 +119,53 @@
         }
 
         .link-item {
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.5rem;
         }
 
         .link-item a {
             text-decoration: none;
-            color: var(--admin-text);
-            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1rem 1.2rem;
-            background: #f8fafc;
-            border-radius: 12px;
-            transition: all 0.2s ease;
+            padding: 1.2rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            transition: all 0.3s ease;
             border: 1px solid transparent;
         }
 
         .link-item a:hover {
-            background: white;
+            background: rgba(245, 130, 32, 0.1);
             border-color: var(--admin-primary);
-            color: var(--admin-primary);
-            box-shadow: 0 4px 12px rgba(245, 130, 32, 0.1);
+            color: white;
+            padding-left: 1.8rem;
         }
 
         .link-item a i {
             font-size: 0.9rem;
-            opacity: 0.5;
+            opacity: 0.3;
+            transition: all 0.3s ease;
         }
 
-        .status-badge {
-            background: #e2e8f0;
-            color: #475569;
-            font-size: 0.75rem;
-            padding: 4px 10px;
-            border-radius: 50px;
-            font-weight: 600;
+        .link-item a:hover i {
+            opacity: 1;
+            transform: translateX(5px);
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             body {
                 flex-direction: column;
             }
             .sidebar {
                 width: 100%;
-                padding: 1rem 2rem;
+                padding: 2rem;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
             .main-content {
-                padding: 2rem 5%;
+                padding: 3rem 5%;
             }
         }
     </style>

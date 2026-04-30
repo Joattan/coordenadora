@@ -131,32 +131,34 @@
             }
         }
 
-        /* Elite da Beleza Cards */
-        .elite-card {
+        /* Premium Cards (Reference Style) */
+        .premium-card {
             position: relative;
-            height: 400px;
-            border-radius: 20px;
+            height: 420px;
+            border-radius: 24px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: flex-end;
             padding: 2.5rem;
             color: white;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .elite-card::before {
+        .premium-card::before {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%);
+            background: linear-gradient(to top, 
+                rgba(0, 0, 0, 0.95) 0%, 
+                rgba(0, 0, 0, 0.4) 50%, 
+                rgba(0, 0, 0, 0.1) 100%);
             z-index: 1;
-            transition: opacity 0.3s ease;
         }
 
-        .elite-card .card-bg {
+        .premium-card .card-bg {
             position: absolute;
             inset: 0;
             width: 100%;
@@ -166,44 +168,55 @@
             transition: transform 0.6s ease;
         }
 
-        .elite-card:hover {
+        .premium-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
         }
 
-        .elite-card:hover .card-bg {
+        .premium-card:hover .card-bg {
             transform: scale(1.1);
         }
 
-        .elite-card .card-content {
+        .premium-card .card-content {
             position: relative;
             z-index: 2;
-            text-align: left;
         }
 
-        .elite-card .card-content h3 {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .elite-card .card-content .rank {
-            font-size: 0.9rem;
+        .premium-card .tag {
+            font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 2px;
-            opacity: 0.9;
+            font-weight: 700;
             margin-bottom: 0.5rem;
             display: block;
-            font-weight: 700;
+            color: var(--primary-color);
         }
 
-        .elite-card .card-content .prizes {
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: var(--white);
-            border-top: 1px solid rgba(255,255,255,0.2);
-            padding-top: 0.8rem;
-            margin-top: 0.5rem;
+        .premium-card h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .premium-card p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin-bottom: 1.2rem;
+            line-height: 1.5;
+        }
+
+        .premium-card .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        .premium-card .footer-highlight {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #8CC63F;
         }
     </style>
 </head>
@@ -234,34 +247,39 @@
         </div>
 
         <div class="summary-card-grid">
-            <div class="elite-card" style="justify-content: flex-end;">
-                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%); z-index: 1;"></div>
+            <!-- Cadastros -->
+            <div class="premium-card">
                 <img src="{% static 'core/images/Cad01.png' %}" class="card-bg" alt="Cadastros">
                 <div class="card-content">
-                    <span class="rank" style="color: var(--primary-color);">Oportunidade</span>
+                    <span class="tag" style="color: var(--primary-color);">Oportunidade</span>
                     <h3>Cadastros</h3>
-                    <div class="condition">Ganhe até R$ 50,00 por cada novo cadastro</div>
-                    <p class="prizes" style="font-size: 1.5rem; color: var(--accent-color);">R$ 50,00 / Cadastro</p>
+                    <p>Ganhe bonificações imediatas por cada novo cadastro ativo em sua equipe.</p>
+                    <div class="divider"></div>
+                    <span class="footer-highlight">R$ 50,00 / Cadastro</span>
                 </div>
             </div>
-            <div class="elite-card" style="justify-content: flex-end;">
-                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%); z-index: 1;"></div>
+
+            <!-- Bônus Extra -->
+            <div class="premium-card">
                 <img src="{% static 'core/images/Cad02.png' %}" class="card-bg" alt="Bônus Extra">
                 <div class="card-content">
-                    <span class="rank" style="color: var(--secondary-color);">Reconhecimento</span>
+                    <span class="tag" style="color: var(--secondary-color);">Reconhecimento</span>
                     <h3>Bônus Extra</h3>
-                    <div class="condition">Premiamos sua Performance com pedidos e cadastros ativos</div>
-                    <p class="prizes" style="font-size: 1.5rem; color: var(--accent-color);">Performance</p>
+                    <p>Aumente sua lucratividade mensal através de metas de performance e engajamento.</p>
+                    <div class="divider"></div>
+                    <span class="footer-highlight">Metas de Performance</span>
                 </div>
             </div>
-            <div class="elite-card" style="justify-content: flex-end;">
-                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%); z-index: 1;"></div>
+
+            <!-- Escala Real -->
+            <div class="premium-card">
                 <img src="{% static 'core/images/Cad03.png' %}" class="card-bg" alt="Escala Real">
                 <div class="card-content">
-                    <span class="rank" style="color: var(--accent-color);">Escalabilidade</span>
+                    <span class="tag" style="color: var(--accent-color);">Escalabilidade</span>
                     <h3>Escala Real</h3>
-                    <div class="condition">Com apenas 50 pedidos, seu ganho inicial garantido</div>
-                    <p class="prizes" style="font-size: 1.5rem; color: var(--accent-color);">R$ 2.500,00</p>
+                    <p>Com apenas 50 pedidos, você atinge o primeiro nível de ganhos garantidos.</p>
+                    <div class="divider"></div>
+                    <span class="footer-highlight">R$ 2.500,00 Garantidos</span>
                 </div>
             </div>
         </div>
@@ -410,28 +428,37 @@
         </div>
 
         <div class="summary-card-grid" style="margin-top: 3rem;">
-            <div class="elite-card">
+            <!-- Elite Bronze -->
+            <div class="premium-card">
                 <img src="{% static 'core/images/prize_100_round.png' %}" class="card-bg" alt="Elite Bronze">
                 <div class="card-content">
-                    <span class="rank" style="color: #CD7F32;">Reconhecimento TOP 100</span>
+                    <span class="tag" style="color: #CD7F32;">Top 100</span>
                     <h3 style="color: #CD7F32;">Elite Bronze</h3>
-                    <p class="prizes">Pin Bronze + Relógio</p>
+                    <p>Reconhecimento para quem atinge a marca de 100 pedidos por campanha.</p>
+                    <div class="divider"></div>
+                    <span class="footer-highlight">Pin + Relógio Exclusivo</span>
                 </div>
             </div>
-            <div class="elite-card">
+            <!-- Elite Prata -->
+            <div class="premium-card">
                 <img src="{% static 'core/images/prize_200_round.png' %}" class="card-bg" alt="Elite Prata">
                 <div class="card-content">
-                    <span class="rank" style="color: #C0C0C0;">Reconhecimento TOP 200</span>
+                    <span class="tag" style="color: #C0C0C0;">Top 200</span>
                     <h3 style="color: #C0C0C0;">Elite Prata</h3>
-                    <p class="prizes">Pin Prata + Smartphone</p>
+                    <p>Suba de nível e garanta prêmios de tecnologia e reconhecimento oficial.</p>
+                    <div class="divider"></div>
+                    <span class="footer-highlight">Pin + Smartphone</span>
                 </div>
             </div>
-            <div class="elite-card">
+            <!-- Elite Ouro -->
+            <div class="premium-card">
                 <img src="{% static 'core/images/prize_300_round.png' %}" class="card-bg" alt="Elite Ouro">
                 <div class="card-content">
-                    <span class="rank" style="color: var(--gold-color);">Reconhecimento TOP 300</span>
+                    <span class="tag" style="color: var(--gold-color);">Top 300</span>
                     <h3 style="color: var(--gold-color);">Elite Ouro</h3>
-                    <p class="prizes">Pin Ouro + Notebook</p>
+                    <p>O topo da performance Odorata com as melhores premiações do mercado.</p>
+                    <div class="divider"></div>
+                    <span class="footer-highlight">Pin + Notebook</span>
                 </div>
             </div>
         </div>
@@ -440,6 +467,79 @@
             <a href="https://ambientevirtual.odorata.com.br/pre-cadastro?_gl=1%2a1gtdomn%2a_gcl_aw%2aR0NMLjE3NzYyNzIyNTMuQ2p3S0NBanc3dnpPQmhCeEVpd0FjN1dOcjZwRmRtNndQa3ZyU2E4VHlMNTBhcFJUbnI5aTNPT3BnUkI1aUJnNS16Vkt5Z0dWTFMweTR4b0NfR0VRQXZEX0J3RQ..%2a_gcl_au%2aMTEyMzA0MTEzMS4xNzc2MjcxMTg5%2a_ga%2aMTQ5MzE0MDA1Ny4xNzI2ODYwODQ0%2a_ga_H278Y0TMM1%2aczE3NzcwMzkyNTEkbzI4JGcxJHQxNzc3MDM5MjczJGozOCRsMCRoMA..%2a_ga_ZK2YT4K3XL%2aczE3NzcwMzkyNTIkbzE5JGcxJHQxNzc3MDM5MjczJGozOSRsMCRoMA..%2a_ga_6S9V3M68PS%2aczE3NzcwMzkyNTIkbzE5JGcxJHQxNzc3MDM5MjczJGozOSRsMCRoMA.." target="_blank" class="btn btn-primary" style="padding: 1.2rem 3rem;">
                 Quero ser uma consultora
             </a>
+        </div>
+    </section>
+
+    <!-- 5. Mural das TOP Coordenadoras -->
+    <section class="mural-section">
+        <div class="section-title">
+            <h2 class="text-gradient">Mural das TOP Coordenadoras</h2>
+            <p>Conheça as histórias de liderança e sucesso das nossas maiores estrelas.</p>
+        </div>
+
+        <div class="mural-container">
+            <div class="mural-track" id="mural-track">
+                <!-- Slide 01 - Bronze -->
+                <div class="mural-slide">
+                    <img src="{% static 'core/images/c01.png' %}" class="mural-photo" alt="Coordenadora 01">
+                    <div class="mural-info">
+                        <div class="rule-badge" style="background: #CD7F32; color: white; margin-bottom: 1rem; display: inline-block; padding: 0.5rem 1.5rem; border-radius: 50px; font-weight: 700; font-size: 0.8rem;">Elite Bronze</div>
+                        <h3 class="mural-quote">"Em busca de crescimento constante."</h3>
+                        <p class="mural-story">
+                            Mariana começou com apenas 5 consultoras e, com muita persistência, dobrou sua equipe em 3 campanhas. 
+                            Hoje, ela celebra seu primeiro Pin Bronze e foca no crescimento contínuo para o próximo semestre.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Slide 02 - Prata -->
+                <div class="mural-slide">
+                    <img src="{% static 'core/images/c02.png' %}" class="mural-photo" alt="Coordenadora 02">
+                    <div class="mural-info">
+                        <div class="rule-badge" style="background: #C0C0C0; color: #333; margin-bottom: 1rem; display: inline-block; padding: 0.5rem 1.5rem; border-radius: 50px; font-weight: 700; font-size: 0.8rem;">Elite Prata</div>
+                        <h3 class="mural-quote">"Construindo uma história de sucesso."</h3>
+                        <p class="mural-story">
+                            Depois de anos como consultora, Ana Paula assumiu the desafio da coordenação. 
+                            Com um plano de ação focado em novos cadastros, ela conquistou o nível Prata 
+                            e já é referência de liderança em sua região.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Slide 03 - Ouro -->
+                <div class="mural-slide">
+                    <img src="{% static 'core/images/c03.png' %}" class="mural-photo" alt="Coordenadora 03">
+                    <div class="mural-info">
+                        <div class="rule-badge" style="background: linear-gradient(135deg, #FFD700 0%, #B38728 100%); color: #000; margin-bottom: 1rem; display: inline-block; padding: 0.5rem 1.5rem; border-radius: 50px; font-weight: 700; font-size: 0.8rem;">Elite Ouro</div>
+                        <h3 class="mural-quote">"O segredo é o resultado consistente."</h3>
+                        <p class="mural-story">
+                            Beatriz é o exemplo de consistência. Mantendo a alta performance de sua equipe, 
+                            ela conquistou o nível Ouro e hoje lidera com maestria uma das maiores divisões da marca.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Slide 04 - Bronze -->
+                <div class="mural-slide">
+                    <img src="{% static 'core/images/c04.png' %}" class="mural-photo" alt="Coordenadora 04">
+                    <div class="mural-info">
+                        <div class="rule-badge" style="background: #CD7F32; color: white; margin-bottom: 1rem; display: inline-block; padding: 0.5rem 1.5rem; border-radius: 50px; font-weight: 700; font-size: 0.8rem;">Elite Bronze</div>
+                        <h3 class="mural-quote">"Exemplo de ações fora da curva."</h3>
+                        <p class="mural-story">
+                            Carla transformou sua divisão com ações inovadoras em campo e parcerias locais. 
+                            Sua trajetória mostra que a criatividade aliada ao trabalho duro gera resultados extraordinários.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="mural-nav">
+            <div class="mural-dot active" onclick="gotoSlide(0)"></div>
+            <div class="mural-dot" onclick="gotoSlide(1)"></div>
+            <div class="mural-dot" onclick="gotoSlide(2)"></div>
+            <div class="mural-dot" onclick="gotoSlide(3)"></div>
         </div>
     </section>
 
@@ -471,6 +571,26 @@
         <p style="margin-top: 2rem; opacity: 0.5;">&copy; 2026 Odorata Cosméticos. Todos os direitos reservados.</p>
     </footer>
 
+    <script>
+        // Carousel Mural Logic
+        const track = document.getElementById('mural-track');
+        const dots = document.querySelectorAll('.mural-dot');
+        let currentSlide = 0;
+
+        function gotoSlide(index) {
+            currentSlide = index;
+            if(track) track.style.transform = `translateX(-${index * 100}%)`;
+            
+            dots.forEach(dot => dot.classList.remove('active'));
+            if(dots[index]) dots[index].classList.add('active');
+        }
+
+        // Auto-play
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % 4;
+            gotoSlide(currentSlide);
+        }, 8000);
+    </script>
 </body>
 
 </html>
